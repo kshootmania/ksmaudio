@@ -23,9 +23,7 @@ namespace ksmaudio::AudioEffect
 
 	void PhaserDSP::process(float* pData, std::size_t dataSize, bool bypass, const PhaserDSPParams& params)
 	{
-		// #49の対応
-		// https://github.com/kshootmania/ksm-v2/issues/49
-		if (m_info.isUnsupported || bypass)
+		if (m_info.isUnsupported)
 		{
 			return;
 		}
