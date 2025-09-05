@@ -40,7 +40,7 @@ namespace ksmaudio::AudioEffect
 			m_hiCutFilters[channel].setHighShelfFilter(centerFreq, kHiCutFilterQ, kHiCutFilterGain, m_info.sampleRateFloat);
 		}
 
-		const std::size_t stage = params.mix > 0.0f ? params.stage : 0U;
+		const std::size_t stage = !bypass && params.mix > 0.0f ? params.stage : 0U;
 		if (stage > 0U)
 		{
 			for (std::size_t i = 0; i < numFrames; ++i)
