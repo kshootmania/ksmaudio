@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <cmath>
 #include <numbers>
 
 namespace ksmaudio::AudioEffect::detail
