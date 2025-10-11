@@ -203,14 +203,18 @@ namespace ksmaudio
 
 	SecondsF Stream::latency() const
 	{
-		/*DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
+#if defined(_WIN32)
+		// Windowsの場合はBASS_DATA_AVAILABLEで取得される値の変動が大きいため、バッファサイズを定数で返した方が音声エフェクトのタイミング計算が安定する
+		return SecondsF{ kBufferSizeMs / 1000.0f };
+#else
+		// Linux/macOSの場合はBASS_DATA_AVAILABLEで取得される値がバッファサイズと異なるため、取得したものを返す
+		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
 		if (playbuf != (DWORD)-1)
 		{
 			return SecondsF{ BASS_ChannelBytes2Seconds(m_hStream, playbuf) };
-		}*/
-
-		// 上記でも大抵バッファサイズと同じになるが変動するので、そのままバッファサイズを返した方が音声エフェクトのタイミング計算が安定する
+		}
 		return SecondsF{ kBufferSizeMs / 1000.0f };
+#endif
 	}
 
 	void Stream::lockBegin() const
