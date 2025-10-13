@@ -1,5 +1,6 @@
 ﻿#include "ksmaudio/sample.hpp"
 #include <cassert>
+#include <utility>
 
 namespace
 {
@@ -19,12 +20,41 @@ namespace ksmaudio
 
 	Sample::~Sample()
 	{
-		BASS_SampleFree(m_hSample);
+		if (m_hSample != 0)
+		{
+			BASS_SampleFree(m_hSample);
+		}
+	}
+
+	Sample::Sample(Sample&& other) noexcept
+		: m_hSample(std::exchange(other.m_hSample, 0))
+	{
+	}
+
+	Sample& Sample::operator=(Sample&& other) noexcept
+	{
+		if (this != &other)
+		{
+			if (m_hSample != 0)
+			{
+				BASS_SampleFree(m_hSample);
+			}
+			m_hSample = std::exchange(other.m_hSample, 0);
+		}
+		return *this;
 	}
 
 	void Sample::play(double volume) const
 	{
+		if (m_hSample == 0)
+		{
+			return;
+		}
 		const HCHANNEL hChannel = BASS_SampleGetChannel(m_hSample, FALSE);
+		if (hChannel == 0)
+		{
+			return;
+		}
 		BASS_ChannelSetAttribute(hChannel, BASS_ATTRIB_VOL, static_cast<float>(volume));
 		BASS_ChannelPlay(hChannel, TRUE);
 	}

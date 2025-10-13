@@ -7,7 +7,7 @@ namespace ksmaudio
 	class Sample
 	{
 	private:
-		const HSAMPLE m_hSample;
+		HSAMPLE m_hSample = 0;
 
 	public:
 		// Note: filePath must be in UTF-8
@@ -19,9 +19,9 @@ namespace ksmaudio
 
 		Sample& operator=(const Sample&) = delete;
 
-		Sample(Sample&&) = default;
+		Sample(Sample&& other) noexcept;
 
-		Sample& operator=(Sample&&) = default;
+		Sample& operator=(Sample&& other) noexcept;
 
 		void play(double volume = 1.0) const;
 	};
