@@ -28,7 +28,13 @@ namespace ksmaudio::AudioEffect
 		const float mix = params.mix;
 		m_playSpeed = std::pow(2.0f, m_pitch / 12.0f);
 		m_chunkSize = static_cast<std::size_t>(params.chunkSize * m_info.sampleRateScale);
-		m_overlap = params.overlap;
+		m_overlap = std::clamp(params.overlap, 0.0f, 0.5f);
+
+		if (m_chunkSize < 2)
+		{
+			// チャンクが小さすぎる場合は処理できないためbypass扱い
+			return;
+		}
 
 		if (m_pitch != m_pitchPrev)
 		{
@@ -40,7 +46,7 @@ namespace ksmaudio::AudioEffect
 		}
 
 		const std::size_t overlapSample = static_cast<std::size_t>(m_overlap * m_chunkSize);
-		if (overlapSample == 0)
+		if (overlapSample == 0 || m_chunkSize <= overlapSample)
 		{
 			return;
 		}
