@@ -248,6 +248,7 @@ namespace ksmaudio::AudioEffect
 	inline const std::unordered_map<ParamID, Type> kParamIDType{
 		{ ParamID::kUnknown, Type::kUnspecified },
 		{ ParamID::kAttackTime, Type::kLength },
+		{ ParamID::kBandwidth, Type::kFloat },
 		{ ParamID::kDelay, Type::kSample },
 		{ ParamID::kDepth, Type::kSample },
 		{ ParamID::kFeedback, Type::kRate },
