@@ -16,6 +16,9 @@
 #include "dsp/phaser_dsp.hpp"
 #include "params/phaser_params.hpp"
 
+#include "dsp/pitch_shift_dsp.hpp"
+#include "params/pitch_shift_params.hpp"
+
 #include "dsp/wobble_dsp.hpp"
 #include "params/wobble_params.hpp"
 
@@ -49,6 +52,8 @@ namespace ksmaudio
 	using Bitcrusher = AudioEffect::BasicAudioEffect<AudioEffect::BitcrusherParams, AudioEffect::BitcrusherDSP, AudioEffect::BitcrusherDSPParams, 20>;
 
 	using Phaser = AudioEffect::BasicAudioEffect<AudioEffect::PhaserParams, AudioEffect::PhaserDSP, AudioEffect::PhaserDSPParams, 16>;
+
+	using PitchShift = AudioEffect::BasicAudioEffect<AudioEffect::PitchShiftParams, AudioEffect::PitchShiftDSP, AudioEffect::PitchShiftDSPParams, 20>;
 
 	using Wobble = AudioEffect::BasicAudioEffectWithTrigger<AudioEffect::WobbleParams, AudioEffect::WobbleDSP, AudioEffect::WobbleDSPParams, 17>;
 
