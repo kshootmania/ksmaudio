@@ -121,8 +121,8 @@ namespace ksmaudio::AudioEffect
 		const std::size_t pos2FindStart = ((pos1 == std::string::npos) ? 0U : pos1 + 1U/*'>'*/) + 1U/*negative sign '-'*/;
 		const std::size_t pos2 = str.find('-', pos2FindStart);
 
-		const std::string offStr = str.substr(0U, pos1);
-		const std::string onMinStr = (pos1 == std::string::npos) ? offStr : str.substr(pos1 + 1U/*'>'*/, pos2);
+		const std::string offStr = (pos1 == std::string::npos) ? ((pos2 == std::string::npos) ? str : str.substr(0U, pos2)) : str.substr(0U, pos1);
+		const std::string onMinStr = (pos1 == std::string::npos) ? offStr : ((pos2 == std::string::npos) ? str.substr(pos1 + 1U/*'>'*/) : str.substr(pos1 + 1U/*'>'*/, pos2 - pos1 - 1U));
 		const std::string onMaxStr = (pos2 == std::string::npos) ? onMinStr : str.substr(pos2 + 1U/*'-'*/);
 
 		ValueSet valueSet = {
