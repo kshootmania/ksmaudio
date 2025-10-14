@@ -15,7 +15,7 @@ namespace ksmaudio::AudioEffect
 
 	struct WobbleParams
 	{
-		Param waveLength = DefineParam(Type::kLength, "0");
+		Param waveLength = DefineParam(Type::kWaveLength, "0");
 		Param freq1 = DefineParam(Type::kFreq, "500Hz");
 		Param freq2 = DefineParam(Type::kFreq, "20000Hz");
 		Param q = DefineParam(Type::kFloat, "1.414");

@@ -13,7 +13,7 @@ namespace ksmaudio::AudioEffect
 
 	struct GateParams
 	{
-		Param waveLength = DefineParam(Type::kLength, "0");
+		Param waveLength = DefineParam(Type::kWaveLength, "0");
 		Param rate = DefineParam(Type::kRate, "50%");
 		Param mix = DefineParam(Type::kRate, "0%>90%");
 

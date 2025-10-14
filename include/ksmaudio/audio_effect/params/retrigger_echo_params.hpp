@@ -17,7 +17,7 @@ namespace ksmaudio::AudioEffect
 	struct RetriggerParams
 	{
 		Param updatePeriod = DefineParam(Type::kLength, "1/2");
-		Param waveLength = DefineParam(Type::kLength, "0");
+		Param waveLength = DefineParam(Type::kWaveLength, "0");
 		Param rate = DefineParam(Type::kRate, "70%");
 		UpdateTriggerParam updateTrigger = DefineUpdateTriggerParam("off");
 		Param mix = DefineParam(Type::kRate, "0%>100%");
@@ -61,7 +61,7 @@ namespace ksmaudio::AudioEffect
 	struct EchoParams
 	{
 		Param updatePeriod = DefineParam(Type::kLength, "0");
-		Param waveLength = DefineParam(Type::kLength, "0");
+		Param waveLength = DefineParam(Type::kWaveLength, "0");
 		UpdateTriggerParam updateTrigger = DefineUpdateTriggerParam("off>on");
 		Param feedbackLevel = DefineParam(Type::kRate, "100%");
 		Param mix = DefineParam(Type::kRate, "0%>100%");
