@@ -1,4 +1,4 @@
-#include "ksmaudio/audio_effect/dsp/pitch_shift_dsp.hpp"
+﻿#include "ksmaudio/audio_effect/dsp/pitch_shift_dsp.hpp"
 #include <cmath>
 #include <algorithm>
 #include <cassert>
@@ -81,7 +81,7 @@ namespace ksmaudio::AudioEffect
 					else
 					{
 						const std::size_t prevPrevIdx = (m_prevPrevStart + step) % kDelayBufferMax;
-						const float rate2 = std::min(static_cast<float>(m_thirdChunkBlendStep.value()) / overlapSample, 1.0f);
+						const float rate2 = (std::min)(static_cast<float>(m_thirdChunkBlendStep.value()) / overlapSample, 1.0f);
 						output = m_delayBuffer[ch][currentIdx] * rate + (m_delayBuffer[ch][prevIdx] * rate2 + m_delayBuffer[ch][prevPrevIdx] * (1.0f - rate2)) * (1.0f - rate);
 						if (ch == m_info.numChannels - 1)
 						{
