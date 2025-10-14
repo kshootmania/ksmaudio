@@ -2,16 +2,16 @@
 #include <cmath>
 #include <algorithm>
 #include <cassert>
-#include <vector>
 
 namespace ksmaudio::AudioEffect
 {
 	PitchShiftDSP::PitchShiftDSP(const DSPCommonInfo& info)
 		: m_info(info)
+		, m_delayBuffer(info.numChannels)
+		, m_lowpassFilter(info.numChannels)
 	{
 		m_start = kDelayBufferMax - m_chunkSize;
-		m_startp = kDelayBufferMax - m_chunkSize - static_cast<int>(m_overlap * m_chunkSize);
-		m_startp2 = kDelayBufferMax - m_chunkSize - static_cast<int>(m_overlap * m_chunkSize);
+		m_prevStart = m_prevPrevStart = kDelayBufferMax - m_chunkSize - static_cast<std::size_t>(m_overlap * m_chunkSize);
 	}
 
 	void PitchShiftDSP::process(float* pData, std::size_t dataSize, bool bypass, const PitchShiftDSPParams& params)
@@ -24,116 +24,109 @@ namespace ksmaudio::AudioEffect
 		assert(dataSize % m_info.numChannels == 0);
 		const std::size_t numFrames = dataSize / m_info.numChannels;
 
-		// TODO: 持ち方を変更して不要化
-		std::vector<float> leftChannel(numFrames);
-		std::vector<float> rightChannel(numFrames);
-		std::vector<float> leftChannelOut(numFrames);
-		std::vector<float> rightChannelOut(numFrames);
-
-		for (std::size_t i = 0; i < numFrames; ++i)
-		{
-			leftChannel[i] = pData[i * m_info.numChannels + 0];
-			rightChannel[i] = pData[i * m_info.numChannels + 1];
-		}
-
-		float* inputs[2] = { leftChannel.data(), rightChannel.data() };
-		float* outputs[2] = { leftChannelOut.data(), rightChannelOut.data() };
-
 		m_pitch = params.pitch;
 		const float mix = params.mix;
 		m_playSpeed = std::pow(2.0f, m_pitch / 12.0f);
-		m_chunkSize = static_cast<int>(params.chunkSize);
+		m_chunkSize = static_cast<std::size_t>(params.chunkSize * m_info.sampleRateScale);
 		m_overlap = params.overlap;
 
 		if (m_pitch != m_pitchPrev)
 		{
-			if (m_playSpeed > 1.0f)
+			const float cutoffFreq = m_playSpeed > 1.0f ? m_info.sampleRateFloat / 2 / m_playSpeed : m_info.sampleRateFloat / 2;
+			for (std::size_t ch = 0; ch < m_lowpassFilter.size(); ++ch)
 			{
-				m_lowpassFilter[kChannelLeft].setLowPassFilter(m_info.sampleRateFloat / 2 / m_playSpeed, 0.707f, m_info.sampleRateFloat);
-				m_lowpassFilter[kChannelRight].setLowPassFilter(m_info.sampleRateFloat / 2 / m_playSpeed, 0.707f, m_info.sampleRateFloat);
-			}
-			else
-			{
-				m_lowpassFilter[kChannelLeft].setLowPassFilter(m_info.sampleRateFloat / 2, 0.707f, m_info.sampleRateFloat);
-				m_lowpassFilter[kChannelRight].setLowPassFilter(m_info.sampleRateFloat / 2, 0.707f, m_info.sampleRateFloat);
+				m_lowpassFilter[ch].setLowPassFilter(cutoffFreq, 0.707f, m_info.sampleRateFloat);
 			}
 		}
 
-		const int overlapSample = static_cast<int>(m_overlap * m_chunkSize);
-		for (int i = 0; i < numFrames; i++)
+		const std::size_t overlapSample = static_cast<std::size_t>(m_overlap * m_chunkSize);
+		if (overlapSample == 0)
 		{
-			m_delayBuffer[kChannelLeft][m_cursor] = inputs[kChannelLeft][i];
-			m_delayBuffer[kChannelRight][m_cursor] = inputs[kChannelRight][i];
-			const int step = static_cast<int>(m_count * m_playSpeed) % (m_chunkSize - overlapSample);
-			if ((m_pitch == 0.0f) || (mix == 0.0f))
+			return;
+		}
+
+		assert(m_delayBuffer.size() == m_info.numChannels);
+		assert(m_lowpassFilter.size() == m_info.numChannels);
+		for (std::size_t i = 0; i < numFrames; ++i)
+		{
+			for (std::size_t ch = 0; ch < m_info.numChannels; ++ch)
 			{
-				outputs[kChannelLeft][i] = inputs[kChannelLeft][i];
-				outputs[kChannelRight][i] = inputs[kChannelRight][i];
-			}
-			else
-			{
-				if (static_cast<int>(m_count * m_playSpeed) <= overlapSample)
+				m_delayBuffer[ch][m_cursor] = *pData;
+				
+				const std::size_t countTimesPlaySpeed = static_cast<std::size_t>(m_count * m_playSpeed);
+				const std::size_t step = countTimesPlaySpeed % (m_chunkSize - overlapSample);
+				
+				if (m_pitch == 0.0f || mix == 0.0f)
 				{
-					if (m_step2 < 0)
+					++pData;
+					continue;
+				}
+
+				float output;
+				if (countTimesPlaySpeed <= overlapSample)
+				{
+					const float rate = static_cast<float>(step) / overlapSample;
+					const std::size_t currentIdx = (kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax;
+					const std::size_t prevIdx = (m_prevStart + step) % kDelayBufferMax;
+					if (!m_thirdChunkBlendStep.has_value())
 					{
-						const float rate = static_cast<float>(step) / overlapSample;
-						outputs[kChannelLeft][i] = m_delayBuffer[kChannelLeft][(kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax] * rate + m_delayBuffer[kChannelLeft][(m_startp + step) % kDelayBufferMax] * (1.0f - rate);
-						outputs[kChannelRight][i] = m_delayBuffer[kChannelRight][(kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax] * rate + m_delayBuffer[kChannelRight][(m_startp + step) % kDelayBufferMax] * (1.0f - rate);
+						output = m_delayBuffer[ch][currentIdx] * rate + m_delayBuffer[ch][prevIdx] * (1.0f - rate);
 					}
 					else
 					{
-						const float rate = static_cast<float>(step) / overlapSample;
-						const float rate2 = std::min(static_cast<float>(m_step2) / overlapSample, 1.0f);
-						outputs[kChannelLeft][i] = m_delayBuffer[kChannelLeft][(kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax] * rate + (m_delayBuffer[kChannelLeft][(m_startp + step) % kDelayBufferMax] * rate2 + m_delayBuffer[kChannelLeft][(m_startp2 + step) % kDelayBufferMax] * (1.0f - rate2)) * (1.0f - rate);
-						outputs[kChannelRight][i] = m_delayBuffer[kChannelRight][(kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax] * rate + (m_delayBuffer[kChannelRight][(m_startp + step) % kDelayBufferMax] * rate2 + m_delayBuffer[kChannelRight][(m_startp2 + step) % kDelayBufferMax] * (1.0f - rate2)) * (1.0f - rate);
-						m_step2++;
+						const std::size_t prevPrevIdx = (m_prevPrevStart + step) % kDelayBufferMax;
+						const float rate2 = std::min(static_cast<float>(m_thirdChunkBlendStep.value()) / overlapSample, 1.0f);
+						output = m_delayBuffer[ch][currentIdx] * rate + (m_delayBuffer[ch][prevIdx] * rate2 + m_delayBuffer[ch][prevPrevIdx] * (1.0f - rate2)) * (1.0f - rate);
+						if (ch == m_info.numChannels - 1)
+						{
+							++m_thirdChunkBlendStep.value();
+						}
 					}
 				}
 				else if (step <= overlapSample)
 				{
 					const float rate = static_cast<float>(step) / overlapSample;
-					outputs[kChannelLeft][i] = m_delayBuffer[kChannelLeft][(kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax] * rate + m_delayBuffer[kChannelLeft][(kDelayBufferMax + m_start - overlapSample + step) % kDelayBufferMax] * (1.0f - rate);
-					outputs[kChannelRight][i] = m_delayBuffer[kChannelRight][(kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax] * rate + m_delayBuffer[kChannelRight][(kDelayBufferMax + m_start - overlapSample + step) % kDelayBufferMax] * (1.0f - rate);
+					const std::size_t currentIdx = (kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax;
+					const std::size_t overlapIdx = (kDelayBufferMax + m_start - overlapSample + step) % kDelayBufferMax;
+					output = m_delayBuffer[ch][currentIdx] * rate + m_delayBuffer[ch][overlapIdx] * (1.0f - rate);
 				}
 				else
 				{
-					outputs[kChannelLeft][i] = m_delayBuffer[kChannelLeft][(kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax];
-					outputs[kChannelRight][i] = m_delayBuffer[kChannelRight][(kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax];
+					const std::size_t currentIdx = (kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax;
+					output = m_delayBuffer[ch][currentIdx];
 				}
 
-				outputs[kChannelLeft][i] = m_lowpassFilter[kChannelLeft].process(outputs[kChannelLeft][i]) * mix + inputs[kChannelLeft][i] * (1.0f - mix);
-				outputs[kChannelRight][i] = m_lowpassFilter[kChannelRight].process(outputs[kChannelRight][i]) * mix + inputs[kChannelRight][i] * (1.0f - mix);
+				output = m_lowpassFilter[ch].process(output) * mix + *pData * (1.0f - mix);
+				*pData = output;
+				++pData;
 			}
-			m_count++;
+
+			++m_count;
 			if (m_count > m_chunkSize - overlapSample)
 			{
+				const std::size_t countTimesPlaySpeed = static_cast<std::size_t>((m_count - 1) * m_playSpeed);
+				const std::size_t step = countTimesPlaySpeed % (m_chunkSize - overlapSample);
 				if (step <= overlapSample)
 				{
-					m_startp2 = (kDelayBufferMax + m_start - overlapSample + step) % kDelayBufferMax;
-					m_startp = (kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax;
-					m_step2 = step + 1;
+					m_prevPrevStart = (kDelayBufferMax + m_start - overlapSample + step) % kDelayBufferMax;
+					m_prevStart = (kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax;
+					m_thirdChunkBlendStep = step + 1;
 				}
 				else
 				{
-					m_startp2 = m_startp = (kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax;
-					m_step2 = -1;
+					m_prevPrevStart = m_prevStart = (kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax;
+					m_thirdChunkBlendStep = std::nullopt;
 				}
 				m_count = 0;
 				m_start = m_cursor;
 			}
-			m_cursor++;
+			++m_cursor;
 			if (m_cursor >= kDelayBufferMax)
 			{
 				m_cursor = 0;
 			}
 		}
 		m_pitchPrev = m_pitch;
-
-		for (std::size_t i = 0; i < numFrames; ++i)
-		{
-			pData[i * m_info.numChannels + 0] = outputs[kChannelLeft][i];
-			pData[i * m_info.numChannels + 1] = outputs[kChannelRight][i];
-		}
 	}
 
 	void PitchShiftDSP::updateParams(const PitchShiftDSPParams& params)
