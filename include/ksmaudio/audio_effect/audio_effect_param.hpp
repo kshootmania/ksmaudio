@@ -119,7 +119,7 @@ namespace ksmaudio::AudioEffect
 		}
 	};
 
-	struct UpdateTriggerParam
+	class UpdateTriggerParam
 	{
 	private:
 		Param m_innerParam;

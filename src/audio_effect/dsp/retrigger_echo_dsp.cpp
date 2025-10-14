@@ -27,8 +27,7 @@ namespace ksmaudio::AudioEffect
             m_linearBuffer.write(pData, formerSize);
             m_linearBuffer.read(pData, formerSize, numLoopFrames, numNonZeroFrames, params.fadesOut, params.feedbackLevel, params.mix, bypass);
 
-            // framesUntilTriggerによるトリガ更新
-            // ("update_period"や、"update_trigger"を"param_change"で"on"に変更した場合の更新)
+            // framesUntilTriggerによるトリガ更新("update_period"による更新)
             m_linearBuffer.resetReadWriteCursors();
             m_framesUntilTrigger = -1;
 

@@ -245,11 +245,11 @@ namespace ksmaudio::AudioEffect
 
 	TapestopTriggerParam DefineTapestopTriggerParam(const std::string& valueSetStr)
 	{
-		return TapestopTriggerParam(StrToValueSet(Type::kSwitch, valueSetStr));
+		return TapestopTriggerParam{ StrToValueSet(Type::kSwitch, valueSetStr) };
 	}
 
 	UpdateTriggerParam DefineUpdateTriggerParam(const std::string& valueSetStr)
 	{
-		return UpdateTriggerParam(StrToValueSet(Type::kSwitch, valueSetStr));
+		return UpdateTriggerParam{ StrToValueSet(Type::kSwitch, valueSetStr) };
 	}
 }
