@@ -3,6 +3,13 @@
 #include <algorithm>
 #include <cassert>
 
+namespace
+{
+	// ローパスフィルターのカットオフ周波数係数
+	// ナイキスト周波数ちょうどになるとクリッピング発生するため、余裕を持たせる
+	constexpr float kLowpassCutoffCoeff = 0.95f;
+}
+
 namespace ksmaudio::AudioEffect
 {
 	PitchShiftDSP::PitchShiftDSP(const DSPCommonInfo& info)
@@ -27,8 +34,19 @@ namespace ksmaudio::AudioEffect
 		m_pitch = params.pitch;
 		const float mix = params.mix;
 		m_playSpeed = std::pow(2.0f, m_pitch / 12.0f);
-		m_chunkSize = static_cast<std::size_t>(params.chunkSize * m_info.sampleRateScale);
-		m_overlap = std::clamp(params.overlap, 0.0f, 0.5f);
+		const std::size_t newChunkSize = static_cast<std::size_t>(params.chunkSize * m_info.sampleRateScale);
+		const float newOverlap = std::clamp(params.overlap, 0.0f, 0.5f);
+
+		// チャンクサイズやオーバーラップが変更された場合、バッファ位置を再初期化
+		if (newChunkSize != m_chunkSize || newOverlap != m_overlap)
+		{
+			m_chunkSize = newChunkSize;
+			m_overlap = newOverlap;
+			m_count = 0;
+			m_start = kDelayBufferMax - m_chunkSize;
+			m_prevStart = m_prevPrevStart = kDelayBufferMax - m_chunkSize - static_cast<std::size_t>(m_overlap * m_chunkSize);
+			m_thirdChunkBlendStep = std::nullopt;
+		}
 
 		if (m_chunkSize < 2)
 		{
@@ -38,10 +56,21 @@ namespace ksmaudio::AudioEffect
 
 		if (m_pitch != m_pitchPrev)
 		{
-			const float cutoffFreq = m_playSpeed > 1.0f ? m_info.sampleRateFloat / 2 / m_playSpeed : m_info.sampleRateFloat / 2;
-			for (std::size_t ch = 0; ch < m_lowpassFilter.size(); ++ch)
+			if (m_playSpeed > 1.0f)
 			{
-				m_lowpassFilter[ch].setLowPassFilter(cutoffFreq, 0.707f, m_info.sampleRateFloat);
+				const float cutoffFreq = m_info.sampleRateFloat / 2 / m_playSpeed * kLowpassCutoffCoeff;
+				for (std::size_t ch = 0; ch < m_lowpassFilter.size(); ++ch)
+				{
+					m_lowpassFilter[ch].setLowPassFilter(cutoffFreq, 0.707f, m_info.sampleRateFloat);
+				}
+			}
+			else
+			{
+				const float cutoffFreq = m_info.sampleRateFloat * 0.5f * kLowpassCutoffCoeff;
+				for (std::size_t ch = 0; ch < m_lowpassFilter.size(); ++ch)
+				{
+					m_lowpassFilter[ch].setLowPassFilter(cutoffFreq, 0.707f, m_info.sampleRateFloat);
+				}
 			}
 		}
 
