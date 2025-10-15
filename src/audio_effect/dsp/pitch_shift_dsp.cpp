@@ -92,11 +92,20 @@ namespace ksmaudio::AudioEffect
 		{
 			for (std::size_t ch = 0; ch < m_info.numChannels; ++ch)
 			{
-				m_delayBuffer[ch][m_cursor] = *pData;
-				
+				// ピッチを上げる場合、6次の急峻なLPF適用後の入力を使うことで折り返しノイズの発生を抑える
+				float inputSample = *pData;
+				if (m_playSpeed > 1.0f)
+				{
+					for (std::size_t i = 0; i < kNumLowpassFilters; ++i)
+					{
+						inputSample = m_lowpassFilter[ch][i].process(inputSample);
+					}
+				}
+				m_delayBuffer[ch][m_cursor] = inputSample;
+
 				const std::size_t countTimesPlaySpeed = static_cast<std::size_t>(m_count * m_playSpeed);
 				const std::size_t step = countTimesPlaySpeed % (m_chunkSize - overlapSample);
-				
+
 				if (m_pitch == 0.0f || mix == 0.0f)
 				{
 					++pData;
@@ -137,10 +146,6 @@ namespace ksmaudio::AudioEffect
 					output = m_delayBuffer[ch][currentIdx];
 				}
 
-				for (std::size_t i = 0; i < kNumLowpassFilters; ++i)
-				{
-					output = m_lowpassFilter[ch][i].process(output);
-				}
 				output = output * mix + *pData * (1.0f - mix);
 				*pData = output;
 				++pData;
