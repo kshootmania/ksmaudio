@@ -61,7 +61,10 @@ namespace ksmaudio::AudioEffect
 				const float cutoffFreq = m_info.sampleRateFloat / 2 / m_playSpeed * kLowpassCutoffCoeff;
 				for (std::size_t ch = 0; ch < m_lowpassFilter.size(); ++ch)
 				{
-					m_lowpassFilter[ch].setLowPassFilter(cutoffFreq, 0.707f, m_info.sampleRateFloat);
+					for (std::size_t i = 0; i < kNumLowpassFilters; ++i)
+					{
+						m_lowpassFilter[ch][i].setLowPassFilter(cutoffFreq, 0.707f, m_info.sampleRateFloat);
+					}
 				}
 			}
 			else
@@ -69,7 +72,10 @@ namespace ksmaudio::AudioEffect
 				const float cutoffFreq = m_info.sampleRateFloat * 0.5f * kLowpassCutoffCoeff;
 				for (std::size_t ch = 0; ch < m_lowpassFilter.size(); ++ch)
 				{
-					m_lowpassFilter[ch].setLowPassFilter(cutoffFreq, 0.707f, m_info.sampleRateFloat);
+					for (std::size_t i = 0; i < kNumLowpassFilters; ++i)
+					{
+						m_lowpassFilter[ch][i].setLowPassFilter(cutoffFreq, 0.707f, m_info.sampleRateFloat);
+					}
 				}
 			}
 		}
@@ -131,7 +137,11 @@ namespace ksmaudio::AudioEffect
 					output = m_delayBuffer[ch][currentIdx];
 				}
 
-				output = m_lowpassFilter[ch].process(output) * mix + *pData * (1.0f - mix);
+				for (std::size_t i = 0; i < kNumLowpassFilters; ++i)
+				{
+					output = m_lowpassFilter[ch][i].process(output);
+				}
+				output = output * mix + *pData * (1.0f - mix);
 				*pData = output;
 				++pData;
 			}

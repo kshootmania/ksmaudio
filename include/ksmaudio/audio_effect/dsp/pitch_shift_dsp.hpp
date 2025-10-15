@@ -13,6 +13,7 @@ namespace ksmaudio::AudioEffect
 	{
 	private:
 		static constexpr std::size_t kDelayBufferMax = 44100 * 4;
+		static constexpr std::size_t kNumLowpassFilters = 3;
 
 		const DSPCommonInfo m_info;
 
@@ -28,7 +29,7 @@ namespace ksmaudio::AudioEffect
 		std::size_t m_prevStart = 0;
 		std::size_t m_prevPrevStart = 0;
 		std::optional<std::size_t> m_thirdChunkBlendStep = std::nullopt;
-		std::vector<detail::BiquadFilter<float>> m_lowpassFilter;
+		std::vector<std::array<detail::BiquadFilter<float>, kNumLowpassFilters>> m_lowpassFilter;
 
 	public:
 		explicit PitchShiftDSP(const DSPCommonInfo& info);
