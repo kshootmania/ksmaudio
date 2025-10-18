@@ -126,4 +126,26 @@ namespace ksmaudio::AudioEffect
 		}
 		return m_nameIdxDict.at(name);
 	}
+
+	std::optional<std::size_t> AudioEffectBus::convertIdxToOtherBus(std::size_t idx, const AudioEffectBus& otherBus) const
+	{
+		// このバスのインデックスから名前を探す
+		for (const auto& [name, nameIdx] : m_nameIdxDict)
+		{
+			if (nameIdx == idx)
+			{
+				// 同じ名前がotherBusに存在するか確認
+				if (otherBus.audioEffectContainsName(name))
+				{
+					return otherBus.audioEffectNameToIdx(name);
+				}
+				else
+				{
+					return std::nullopt;
+				}
+			}
+		}
+		assert(false && "Audio effect index out of range");
+		return std::nullopt;
+	}
 }

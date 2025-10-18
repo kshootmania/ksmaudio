@@ -19,6 +19,7 @@ namespace ksmaudio
 		const HSTREAM m_hStream;
 		const BASS_CHANNELINFO m_info;
 		double m_volume;
+		bool m_muted;
 
 	public:
 		explicit Stream(const std::string& filePath, double volume = 1.0, bool enableCompressor = false, bool preload = false, bool loop = false);
@@ -66,6 +67,10 @@ namespace ksmaudio
 		double volume() const;
 
 		void setVolume(double volume);
+
+		bool muted() const;
+
+		void setMuted(bool muted);
 
 		std::size_t sampleRate() const;
 

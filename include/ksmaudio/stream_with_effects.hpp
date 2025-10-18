@@ -48,6 +48,14 @@ namespace ksmaudio
 
 		void setFadeOut(Duration duration) const;
 
+		double volume() const;
+
+		void setVolume(double volume);
+
+		bool muted() const;
+
+		void setMuted(bool muted);
+
 		// Note: The pointer is valid until this StreamWithEffects instance is destroyed.
 		AudioEffect::AudioEffectBus* emplaceAudioEffectBusFX();
 		AudioEffect::AudioEffectBus* emplaceAudioEffectBusLaser();

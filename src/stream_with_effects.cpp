@@ -69,6 +69,26 @@ namespace ksmaudio
 		m_stream.setFadeOut(duration);
 	}
 
+	double StreamWithEffects::volume() const
+	{
+		return m_stream.volume();
+	}
+
+	void StreamWithEffects::setVolume(double volume)
+	{
+		m_stream.setVolume(volume);
+	}
+
+	bool StreamWithEffects::muted() const
+	{
+		return m_stream.muted();
+	}
+
+	void StreamWithEffects::setMuted(bool muted)
+	{
+		m_stream.setMuted(muted);
+	}
+
 	AudioEffect::AudioEffectBus* StreamWithEffects::emplaceAudioEffectBusFX()
 	{
 		return emplaceAudioEffectBusImpl(false);

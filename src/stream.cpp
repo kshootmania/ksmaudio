@@ -78,6 +78,7 @@ namespace ksmaudio
 		, m_hStream(LoadStream(filePath, m_preloadedBinary.get(), loop))
 		, m_info(GetChannelInfo(m_hStream))
 		, m_volume(volume)
+		, m_muted(false)
 	{
 		// 音量を設定
 		BASS_ChannelSetAttribute(m_hStream, BASS_ATTRIB_VOL, static_cast<float>(volume));
@@ -183,12 +184,26 @@ namespace ksmaudio
 	void Stream::setVolume(double volume)
 	{
 		m_volume = volume;
-		BASS_ChannelSetAttribute(m_hStream, BASS_ATTRIB_VOL, static_cast<float>(volume));
+		if (!m_muted)
+		{
+			BASS_ChannelSetAttribute(m_hStream, BASS_ATTRIB_VOL, static_cast<float>(volume));
+		}
 	}
 
 	double Stream::volume() const
 	{
 		return m_volume;
+	}
+
+	bool Stream::muted() const
+	{
+		return m_muted;
+	}
+
+	void Stream::setMuted(bool muted)
+	{
+		m_muted = muted;
+		BASS_ChannelSetAttribute(m_hStream, BASS_ATTRIB_VOL, muted ? 0.0f : static_cast<float>(m_volume));
 	}
 
 	std::size_t Stream::sampleRate() const
