@@ -15,9 +15,9 @@ namespace ksmaudio
 	class Stream
 	{
 	private:
-		const std::unique_ptr<std::vector<char>> m_preloadedBinary;
-		const HSTREAM m_hStream;
-		const BASS_CHANNELINFO m_info;
+		std::unique_ptr<std::vector<char>> m_preloadedBinary;
+		HSTREAM m_hStream;
+		BASS_CHANNELINFO m_info;
 		double m_volume;
 		bool m_muted;
 
