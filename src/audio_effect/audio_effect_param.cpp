@@ -15,6 +15,9 @@ namespace ksmaudio::AudioEffect
 		{
 			switch (type)
 			{
+			case Type::kUnspecified:
+				return 0.0f;
+
 			case Type::kLength:
 			case Type::kWaveLength:
 				// value
@@ -60,6 +63,18 @@ namespace ksmaudio::AudioEffect
 				if (str.ends_with('%'))
 				{
 					return std::clamp(std::stof(str) / 100, 0.0f, 1.0f);
+				}
+				else if (str.starts_with("1/"))
+				{
+					const int d = std::stoi(str.substr(2U)); // 2 = strlen("1/")
+					if (d > 0)
+					{
+						return std::clamp(1.0f / d, 0.0f, 1.0f);
+					}
+					else
+					{
+						return 0.0f;
+					}
 				}
 				return std::clamp(std::stof(str), 0.0f, 1.0f);
 
