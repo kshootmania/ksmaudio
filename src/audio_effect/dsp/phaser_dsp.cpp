@@ -5,7 +5,6 @@ namespace ksmaudio::AudioEffect
 	namespace
 	{
 		constexpr float kHiCutFilterQ = 1.5f;
-		constexpr float kHiCutFilterGain = -8.0f;
 
 		std::array<std::array<float, 2>, PhaserDSP::kMaxNumAllPassFilters> MakeZeroWetArray()
 		{
@@ -37,7 +36,7 @@ namespace ksmaudio::AudioEffect
 		const float centerFreq = detail::InterpolateFreqInLog10ScaleWithPrecalculatedLog10(0.5f, log10Freq1, log10Freq2);
 		for (std::size_t channel = 0; channel < m_info.numChannels; ++channel)
 		{
-			m_hiCutFilters[channel].setHighShelfFilter(centerFreq, kHiCutFilterQ, kHiCutFilterGain, m_info.sampleRateFloat);
+			m_hiCutFilters[channel].setHighShelfFilter(centerFreq, kHiCutFilterQ, params.hiCutGain, m_info.sampleRateFloat);
 		}
 
 		const std::size_t stage = params.mix > 0.0f ? params.stage : 0U;

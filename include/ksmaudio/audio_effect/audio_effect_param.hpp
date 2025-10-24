@@ -18,6 +18,7 @@ namespace ksmaudio::AudioEffect
 		kPitch,
 		kInt,
 		kFloat,
+		kDB,
 		kFilename,
 	};
 
@@ -194,6 +195,7 @@ namespace ksmaudio::AudioEffect
 		kFreq2,
 		kFreqMax,
 		kGain,
+		kHiCutGain,
 		kHoldTime,
 		kMix,
 		kOverlap,
@@ -228,6 +230,7 @@ namespace ksmaudio::AudioEffect
 		{ "freq_2", ParamID::kFreq2 },
 		{ "freq_max", ParamID::kFreqMax },
 		{ "gain", ParamID::kGain },
+		{ "hi_cut_gain", ParamID::kHiCutGain },
 		{ "hold_time", ParamID::kHoldTime },
 		{ "mix", ParamID::kMix },
 		{ "overlap", ParamID::kOverlap },
@@ -264,6 +267,7 @@ namespace ksmaudio::AudioEffect
 		{ ParamID::kFreq2, Type::kFreq },
 		{ ParamID::kFreqMax, Type::kFreq },
 		{ ParamID::kGain, Type::kRate },
+		{ ParamID::kHiCutGain, Type::kDB },
 		{ ParamID::kHoldTime, Type::kLength },
 		{ ParamID::kMix, Type::kRate },
 		{ ParamID::kOverlap, Type::kRate },

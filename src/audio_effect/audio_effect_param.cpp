@@ -100,6 +100,13 @@ namespace ksmaudio::AudioEffect
 			case Type::kFloat:
 				return std::stof(str);
 
+			case Type::kDB:
+				if (str.ends_with("dB"))
+				{
+					return std::stof(str);
+				}
+				return 0.0f;
+
 			case Type::kFilename:
 				return 0.0f;
 			}

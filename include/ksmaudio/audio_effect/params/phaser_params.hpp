@@ -14,6 +14,7 @@ namespace ksmaudio::AudioEffect
 		float q = 0.707f;
 		float feedback = 0.35f;
 		float stereoWidth = 0.0f;
+		float hiCutGain = -8.0f;
 		float mix = 0.5f;
 	};
 
@@ -26,6 +27,7 @@ namespace ksmaudio::AudioEffect
 		Param q = DefineParam(Type::kFloat, "0.707");
 		Param feedback = DefineParam(Type::kRate, "35%");
 		Param stereoWidth = DefineParam(Type::kRate, "75%");
+		Param hiCutGain = DefineParam(Type::kDB, "-8.0dB");
 		Param mix = DefineParam(Type::kRate, "0%>50%");
 
 		const std::unordered_map<ParamID, Param*> dict = {
@@ -36,6 +38,7 @@ namespace ksmaudio::AudioEffect
 			{ ParamID::kQ, &q },
 			{ ParamID::kFeedback, &feedback },
 			{ ParamID::kStereoWidth, &stereoWidth },
+			{ ParamID::kHiCutGain, &hiCutGain },
 			{ ParamID::kMix, &mix },
 		};
 
@@ -49,6 +52,7 @@ namespace ksmaudio::AudioEffect
 				.q = GetValue(q, status, isOn),
 				.feedback = GetValue(feedback, status, isOn),
 				.stereoWidth = GetValue(stereoWidth, status, isOn),
+				.hiCutGain = GetValue(hiCutGain, status, isOn),
 				.mix = GetValue(mix, status, isOn),
 			};
 		}
