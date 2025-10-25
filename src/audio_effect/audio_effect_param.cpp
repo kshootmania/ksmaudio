@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cmath>
+#include <iostream>
 #include "ksmaudio/audio_effect/detail/wave_length_utils.hpp"
 
 namespace ksmaudio::AudioEffect
@@ -43,12 +44,24 @@ namespace ksmaudio::AudioEffect
 						return 0.0f;
 					}
 				}
-				return std::max(std::stof(str), 0.0f);
+				{
+					const float value = std::stof(str);
+					if (value < 0.0f)
+					{
+						std::cerr << "[ksmaudio warning] length value out of range (>= 0.0): " << value << std::endl;
+					}
+					return std::max(value, 0.0f);
+				}
 
 			case Type::kSample:
 				if (str.ends_with("samples"))
 				{
-					return std::clamp(std::stof(str), 0.0f, 44100.0f);
+					const float value = std::stof(str);
+					if (value < 0.0f || value > 44100.0f)
+					{
+						std::cerr << "[ksmaudio warning] sample value out of range (0-44100): " << value << std::endl;
+					}
+					return std::clamp(value, 0.0f, 44100.0f);
 				}
 				break;
 
@@ -62,7 +75,12 @@ namespace ksmaudio::AudioEffect
 			case Type::kRate:
 				if (str.ends_with('%'))
 				{
-					return std::clamp(std::stof(str) / 100, 0.0f, 1.0f);
+					const float value = std::stof(str) / 100;
+					if (value < 0.0f || value > 1.0f)
+					{
+						std::cerr << "[ksmaudio warning] rate value out of range (0.0-1.0): " << value << std::endl;
+					}
+					return std::clamp(value, 0.0f, 1.0f);
 				}
 				else if (str.starts_with("1/"))
 				{
@@ -76,16 +94,33 @@ namespace ksmaudio::AudioEffect
 						return 0.0f;
 					}
 				}
-				return std::clamp(std::stof(str), 0.0f, 1.0f);
+				{
+					const float value = std::stof(str);
+					if (value < 0.0f || value > 1.0f)
+					{
+						std::cerr << "[ksmaudio warning] rate value out of range (0.0-1.0): " << value << std::endl;
+					}
+					return std::clamp(value, 0.0f, 1.0f);
+				}
 
 			case Type::kFreq:
 				if (str.ends_with("kHz"))
 				{
-					return std::max(std::stof(str), 0.0f) * 1000;
+					const float freq = std::max(std::stof(str), 0.0f) * 1000;
+					if (freq < 10.0f || freq > 20000.0f)
+					{
+						std::cerr << "[ksmaudio warning] freq value out of range (10-20000Hz): " << freq << "Hz" << std::endl;
+					}
+					return std::clamp(freq, 10.0f, 20000.0f);
 				}
 				else if (str.ends_with("Hz"))
 				{
-					return std::max(std::stof(str), 0.0f);
+					const float freq = std::max(std::stof(str), 0.0f);
+					if (freq < 10.0f || freq > 20000.0f)
+					{
+						std::cerr << "[ksmaudio warning] freq value out of range (10-20000Hz): " << freq << "Hz" << std::endl;
+					}
+					return std::clamp(freq, 10.0f, 20000.0f);
 				}
 				return 0.0f;
 
@@ -105,6 +140,10 @@ namespace ksmaudio::AudioEffect
 						{
 							return -(value + 48.0f);
 						}
+					}
+					else
+					{
+						std::cerr << "[ksmaudio warning] pitch value out of range (-48.0-48.0): " << value << std::endl;
 					}
 				}
 				return 0.0f;
