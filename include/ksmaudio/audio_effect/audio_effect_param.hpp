@@ -31,9 +31,9 @@ namespace ksmaudio::AudioEffect
 		float onMax = 0.0f;
 	};
 
-	float StrToValue(Type type, const std::string& str);
+	float StrToValue(Type type, const std::string& str, bool* pSuccess = nullptr);
 
-	ValueSet StrToValueSet(Type type, const std::string& str, bool* pIsError = nullptr);
+	ValueSet StrToValueSet(Type type, const std::string& str, bool* pSuccess = nullptr);
 
 	bool ValueAsBool(float value);
 
