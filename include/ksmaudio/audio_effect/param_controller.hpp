@@ -106,7 +106,7 @@ namespace ksmaudio::AudioEffect
 		const ParamValueSetDict& currentParams() const;
 	};
 
-	ParamValueSetDict StrDictToParamValueSetDict(const std::unordered_map<std::string, std::string>& strDict);
+	ParamValueSetDict StrDictToParamValueSetDict(const std::map<std::string, std::string>& strDict);
 
 	std::unordered_map<ParamID, std::map<float, ValueSet>> StrTimelineToValueSetTimeline(const std::unordered_map<std::string, std::map<float, std::string>>& strTimeline);
 }

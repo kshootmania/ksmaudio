@@ -84,7 +84,7 @@ namespace ksmaudio::AudioEffect
 
 		template <typename T>
 		void emplaceAudioEffect(const std::string& name,
-			const std::unordered_map<std::string, std::string>& params,
+			const std::map<std::string, std::string>& params,
 			const std::unordered_map<std::string, std::map<float, std::string>>& paramChanges = {},
 			const std::set<float>& updateTriggerTiming = {})
 			requires std::derived_from<T, AudioEffect::IAudioEffect>
