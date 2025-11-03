@@ -9,7 +9,7 @@ namespace ksmaudio::AudioEffect
 	struct LowPassFilterDSPParams
 	{
 		float v = 0.0f;
-		float q = 5.0f;
+		float q = 3.6f;
 		float mix = 1.0f;
 	};
 
@@ -19,7 +19,7 @@ namespace ksmaudio::AudioEffect
 		Param v = DefineParam(Type::kRate, "0%-100%");
 		//Param freq = DefineParam(Type::kFreq, "15000Hz");
 		//Param freqMax = DefineParam(Type::kFreq, "800Hz");
-		Param q = DefineParam(Type::kFloat, "5.0");
+		Param q = DefineParam(Type::kFloat, "3.6");
 		Param mix = DefineParam(Type::kRate, "0%>100%");
 
 		const std::unordered_map<ParamID, Param*> dict = {
