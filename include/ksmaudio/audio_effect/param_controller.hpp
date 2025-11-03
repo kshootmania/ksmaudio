@@ -33,8 +33,8 @@ namespace ksmaudio::AudioEffect
 		public:
 			explicit Timeline(const std::map<float, T>& map)
 				: m_map(std::make_shared<const std::map<float, T>>(map))
-				, m_cursorItr(m_map->cbegin())
-				, m_nextCursorItr(m_map->empty() ? m_map->cend() : std::next(m_map->cbegin()))
+				, m_cursorItr(m_map->cend()) // 最初の要素への到達も検出が必要のため、初期値はcbeginではなくcendとする
+				, m_nextCursorItr(m_map->cbegin())
 			{
 			}
 
