@@ -1,8 +1,8 @@
 ﻿#pragma once
-#include "stream.hpp"
-#include "stream_with_effects.hpp"
-#include "sample.hpp"
-#include "audio_effect/all.hpp"
+#include "Stream.hpp"
+#include "StreamWithEffects.hpp"
+#include "Sample.hpp"
+#include "AudioEffect/All.hpp"
 
 namespace ksmaudio
 {

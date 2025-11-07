@@ -123,7 +123,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)third_party\bass;$(ProjectDir)third_party\bass_fx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)ThirdParty_Windows\bass;$(ProjectDir)ThirdParty_Windows\bass_fx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -131,7 +131,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)third_party\bass;$(ProjectDir)third_party\bass_fx;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)ThirdParty_Windows\bass;$(ProjectDir)ThirdParty_Windows\bass_fx;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>bass.lib;bass_fx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
@@ -144,7 +144,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)third_party\bass;$(ProjectDir)third_party\bass_fx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)ThirdParty_Windows\bass;$(ProjectDir)ThirdParty_Windows\bass_fx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -154,75 +154,75 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)third_party\bass;$(ProjectDir)third_party\bass_fx;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)ThirdParty_Windows\bass;$(ProjectDir)ThirdParty_Windows\bass_fx;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>bass.lib;bass_fx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\ksmaudio\audio_effect\audio_effect.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\audio_effect_bus.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\audio_effect_param.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\all.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\detail\biquad_filter.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\detail\linear_buffer.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\detail\linear_easing.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\detail\math_utils.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\detail\ring_buffer.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\detail\dsp_simple_trigger_handler.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\detail\time_modulator.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\detail\update_trigger_timeline.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\detail\wave_length_utils.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\bitcrusher_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\flanger_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\gate_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\high_pass_filter_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\low_pass_filter_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\peaking_filter_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\phaser_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\pitch_shift_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\retrigger_echo_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\sidechain_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\tapestop_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\dsp\wobble_dsp.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\bitcrusher_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\flanger_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\gate_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\high_pass_filter_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\low_pass_filter_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\peaking_filter_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\phaser_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\pitch_shift_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\retrigger_echo_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\sidechain_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\tapestop_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\params\wobble_params.hpp" />
-    <ClInclude Include="include\ksmaudio\audio_effect\param_controller.hpp" />
-    <ClInclude Include="include\ksmaudio\stream.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffect.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffectBus.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\AudioEffectParam.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\All.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\detail\BiquadFilter.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\detail\LinearBuffer.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\detail\LinearEasing.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\detail\MathUtils.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\detail\RingBuffer.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\detail\DSPSimpleTriggerHandler.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\detail\TimeModulator.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\detail\UpdateTriggerTimeline.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\detail\WaveLengthUtils.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\BitcrusherDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\FlangerDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\GateDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\HighPassFilterDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\LowPassFilterDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\PeakingFilterDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\PhaserDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\PitchShiftDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\RetriggerEchoDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\SidechainDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\TapestopDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\DSP\WobbleDSP.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\BitcrusherParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\FlangerParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\GateParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\HighPassFilterParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\LowPassFilterParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\PeakingFilterParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\PhaserParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\PitchShiftParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\RetriggerEchoParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\SidechainParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\TapestopParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\Params\WobbleParams.hpp" />
+    <ClInclude Include="include\ksmaudio\AudioEffect\ParamController.hpp" />
+    <ClInclude Include="include\ksmaudio\Stream.hpp" />
     <ClInclude Include="include\ksmaudio\ksmaudio.hpp" />
-    <ClInclude Include="include\ksmaudio\sample.hpp" />
-    <ClInclude Include="include\ksmaudio\stream_with_effects.hpp" />
+    <ClInclude Include="include\ksmaudio\Sample.hpp" />
+    <ClInclude Include="include\ksmaudio\StreamWithEffects.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\audio_effect\audio_effect_bus.cpp" />
-    <ClCompile Include="src\audio_effect\audio_effect_param.cpp" />
-    <ClCompile Include="src\audio_effect\detail\wave_length_utils.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\bitcrusher_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\flanger_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\gate_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\high_pass_filter_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\low_pass_filter_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\peaking_filter_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\phaser_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\pitch_shift_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\retrigger_echo_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\sidechain_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\tapestop_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\dsp\wobble_dsp.cpp" />
-    <ClCompile Include="src\audio_effect\param_controller.cpp" />
-    <ClCompile Include="src\stream.cpp" />
+    <ClCompile Include="src\AudioEffect\AudioEffectBus.cpp" />
+    <ClCompile Include="src\AudioEffect\AudioEffectParam.cpp" />
+    <ClCompile Include="src\AudioEffect\detail\WaveLengthUtils.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\BitcrusherDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\FlangerDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\GateDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\HighPassFilterDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\LowPassFilterDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\PeakingFilterDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\PhaserDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\PitchShiftDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\RetriggerEchoDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\SidechainDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\TapestopDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\DSP\WobbleDSP.cpp" />
+    <ClCompile Include="src\AudioEffect\ParamController.cpp" />
+    <ClCompile Include="src\Stream.cpp" />
     <ClCompile Include="src\ksmaudio.cpp" />
-    <ClCompile Include="src\sample.cpp" />
-    <ClCompile Include="src\stream_with_effects.cpp" />
+    <ClCompile Include="src\Sample.cpp" />
+    <ClCompile Include="src\StreamWithEffects.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
