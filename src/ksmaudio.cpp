@@ -3,6 +3,19 @@
 
 namespace ksmaudio
 {
+	namespace
+	{
+		double s_masterVolume = 1.0;
+		bool s_isMuted = false;
+
+		void ApplyVolume()
+		{
+			const DWORD bassVolume = s_isMuted ? 0 : static_cast<DWORD>(s_masterVolume * 10000.0);
+			BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, bassVolume);
+			BASS_SetConfig(BASS_CONFIG_GVOL_SAMPLE, bassVolume);
+		}
+	}
+
 	void Init(void* hWnd)
 	{
 #ifdef _WIN32
@@ -26,6 +39,13 @@ namespace ksmaudio
 
 	void SetMute(bool isMute)
 	{
-		BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, isMute ? 0 : 10000);
+		s_isMuted = isMute;
+		ApplyVolume();
+	}
+
+	void SetMasterVolume(double volume)
+	{
+		s_masterVolume = volume;
+		ApplyVolume();
 	}
 }

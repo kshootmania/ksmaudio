@@ -16,4 +16,8 @@ namespace ksmaudio
 	void Terminate();
 
 	void SetMute(bool isMute);
+
+	/// @brief マスターボリュームを設定
+	/// @param volume 音量(0.0〜1.0)
+	void SetMasterVolume(double volume);
 }
