@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <optional>
 #include "bass.h"
 #include "bass_fx.h"
 #include "ksmaudio/AudioEffect/AudioEffect.hpp"
@@ -16,13 +17,15 @@ namespace ksmaudio
 	{
 	private:
 		std::unique_ptr<std::vector<char>> m_preloadedBinary;
+		std::optional<HSTREAM> m_hStreamSource; // テンポ変更時のみ使用
 		HSTREAM m_hStream;
+		double m_playbackSpeed;
 		BASS_CHANNELINFO m_info;
 		double m_volume;
 		bool m_muted;
 
 	public:
-		explicit Stream(const std::string& filePath, double volume = 1.0, bool enableCompressor = false, bool preload = false, bool loop = false);
+		explicit Stream(const std::string& filePath, double volume = 1.0, bool enableCompressor = false, bool preload = false, bool loop = false, double playbackSpeed = 1.0);
 
 		~Stream();
 

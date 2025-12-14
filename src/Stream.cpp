@@ -1,5 +1,6 @@
 ﻿#include "ksmaudio/Stream.hpp"
 #include <fstream>
+#include <optional>
 #include "ksmaudio/ksmaudio.hpp"
 
 namespace
@@ -43,17 +44,26 @@ namespace
 		return binary;
 	}
 
-	HSTREAM LoadStream(const std::string& filePath, const std::vector<char>* pPreloadedBinary, bool loop)
+	HSTREAM LoadStream(const std::string& filePath, const std::vector<char>* pPreloadedBinary, bool loop, bool forTempo)
 	{
 		const DWORD loopFlag = loop ? BASS_SAMPLE_LOOP : 0;
+		const DWORD decodeFlag = forTempo ? BASS_STREAM_DECODE : 0;
 		if (pPreloadedBinary == nullptr)
 		{
-			return BASS_StreamCreateFile(FALSE, filePath.c_str(), 0, 0, BASS_STREAM_PRESCAN | loopFlag);
+			return BASS_StreamCreateFile(FALSE, filePath.c_str(), 0, 0, BASS_STREAM_PRESCAN | loopFlag | decodeFlag);
 		}
 		else
 		{
-			return BASS_StreamCreateFile(TRUE, pPreloadedBinary->data(), 0, static_cast<QWORD>(pPreloadedBinary->size()), BASS_STREAM_PRESCAN | loopFlag);
+			return BASS_StreamCreateFile(TRUE, pPreloadedBinary->data(), 0, static_cast<QWORD>(pPreloadedBinary->size()), BASS_STREAM_PRESCAN | loopFlag | decodeFlag);
 		}
+	}
+
+	HSTREAM CreateTempoStream(HSTREAM hSourceStream, double playbackSpeed)
+	{
+		HSTREAM hTempoStream = BASS_FX_TempoCreate(hSourceStream, 0);
+		const double tempo = (playbackSpeed - 1.0) * 100.0;
+		BASS_ChannelSetAttribute(hTempoStream, BASS_ATTRIB_TEMPO, static_cast<float>(tempo));
+		return hTempoStream;
 	}
 
 	BASS_CHANNELINFO GetChannelInfo(HSTREAM hStream)
@@ -73,9 +83,32 @@ namespace
 
 namespace ksmaudio
 {
-	Stream::Stream(const std::string& filePath, double volume, bool enableCompressor, bool preload, bool loop)
+	namespace
+	{
+		std::optional<HSTREAM> CreateSourceStream(const std::vector<char>* pPreloadedBinary, const std::string& filePath, bool loop, double playbackSpeed)
+		{
+			if (playbackSpeed != 1.0)
+			{
+				return LoadStream(filePath, pPreloadedBinary, loop, true);
+			}
+			return std::nullopt;
+		}
+
+		HSTREAM CreateMainStream(std::optional<HSTREAM> hStreamSource, const std::vector<char>* pPreloadedBinary, const std::string& filePath, bool loop, double playbackSpeed)
+		{
+			if (hStreamSource.has_value())
+			{
+				return CreateTempoStream(hStreamSource.value(), playbackSpeed);
+			}
+			return LoadStream(filePath, pPreloadedBinary, loop, false);
+		}
+	}
+
+	Stream::Stream(const std::string& filePath, double volume, bool enableCompressor, bool preload, bool loop, double playbackSpeed)
 		: m_preloadedBinary(preload ? Preload(filePath) : nullptr)
-		, m_hStream(LoadStream(filePath, m_preloadedBinary.get(), loop))
+		, m_hStreamSource(CreateSourceStream(m_preloadedBinary.get(), filePath, loop, playbackSpeed))
+		, m_hStream(CreateMainStream(m_hStreamSource, m_preloadedBinary.get(), filePath, loop, playbackSpeed))
+		, m_playbackSpeed(playbackSpeed)
 		, m_info(GetChannelInfo(m_hStream))
 		, m_volume(volume)
 		, m_muted(false)
@@ -97,6 +130,10 @@ namespace ksmaudio
 	Stream::~Stream()
 	{
 		BASS_StreamFree(m_hStream);
+		if (m_hStreamSource.has_value())
+		{
+			BASS_StreamFree(m_hStreamSource.value());
+		}
 	}
 
 	void Stream::play() const
@@ -121,17 +158,28 @@ namespace ksmaudio
 
 	SecondsF Stream::posSec() const
 	{
-		return SecondsF{ BASS_ChannelBytes2Seconds(m_hStream, BASS_ChannelGetPosition(m_hStream, BASS_POS_BYTE)) };
+		if (m_playbackSpeed == 0.0)
+		{
+			return SecondsF{ 0.0 };
+		}
+		const double scaledTime = BASS_ChannelBytes2Seconds(m_hStream, BASS_ChannelGetPosition(m_hStream, BASS_POS_BYTE));
+		return SecondsF{ scaledTime / m_playbackSpeed };
 	}
 
 	void Stream::seekPosSec(SecondsF time) const
 	{
-		BASS_ChannelSetPosition(m_hStream, BASS_ChannelSeconds2Bytes(m_hStream, time.count()), 0);
+		const double scaledTime = time.count() * m_playbackSpeed;
+		BASS_ChannelSetPosition(m_hStream, BASS_ChannelSeconds2Bytes(m_hStream, scaledTime), BASS_POS_BYTE);
 	}
 
 	Duration Stream::duration() const
 	{
-		return Duration{ BASS_ChannelBytes2Seconds(m_hStream, BASS_ChannelGetLength(m_hStream, BASS_POS_BYTE)) };
+		if (m_playbackSpeed == 0.0)
+		{
+			return Duration{ 0.0 };
+		}
+		const double scaledDuration = BASS_ChannelBytes2Seconds(m_hStream, BASS_ChannelGetLength(m_hStream, BASS_POS_BYTE));
+		return Duration{ scaledDuration / m_playbackSpeed };
 	}
 
 	HDSP Stream::addAudioEffect(AudioEffect::IAudioEffect* pAudioEffect, int priority) const
