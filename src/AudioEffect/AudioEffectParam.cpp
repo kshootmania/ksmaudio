@@ -379,6 +379,7 @@ namespace ksmaudio::AudioEffect
 	float GetValue(const Param& param, const Status& status, bool isOn)
 	{
 		const float lerped = isOn ? std::lerp(param.valueSet.onMin, param.valueSet.onMax, status.v) : param.valueSet.off;
+		const float effectivePlaybackSpeed = status.playbackSpeed != 0.0f ? status.playbackSpeed : 1.0f;
 
 		if (param.type == Type::kLength)
 		{
@@ -390,7 +391,7 @@ namespace ksmaudio::AudioEffect
 			else
 			{
 				// Not tempo-synced
-				return -lerped;
+				return -lerped / effectivePlaybackSpeed;
 			}
 		}
 
@@ -413,7 +414,7 @@ namespace ksmaudio::AudioEffect
 			else
 			{
 				// Not tempo-synced
-				return -lerped;
+				return -lerped / effectivePlaybackSpeed;
 			}
 		}
 		

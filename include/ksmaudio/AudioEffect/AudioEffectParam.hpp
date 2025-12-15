@@ -51,6 +51,8 @@ namespace ksmaudio::AudioEffect
 		float bpm = 120.0f;
 
 		float sec = -100.0f; // Non-zero negative value is used here to avoid update_trigger being processed before playback
+
+		float playbackSpeed = 1.0f; // Playback speed (e.g., 0.5 for half speed)
 	};
 
 	float GetValue(const Param& param, const Status& status, bool isOn);
