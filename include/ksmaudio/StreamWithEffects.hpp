@@ -56,6 +56,8 @@ namespace ksmaudio
 
 		void setMuted(bool muted);
 
+		bool isPlaying() const;
+
 		// Note: The pointer is valid until this StreamWithEffects instance is destroyed.
 		AudioEffect::AudioEffectBus* emplaceAudioEffectBusFX();
 		AudioEffect::AudioEffectBus* emplaceAudioEffectBusLaser();

@@ -89,6 +89,11 @@ namespace ksmaudio
 		m_stream.setMuted(muted);
 	}
 
+	bool StreamWithEffects::isPlaying() const
+	{
+		return m_stream.isPlaying();
+	}
+
 	AudioEffect::AudioEffectBus* StreamWithEffects::emplaceAudioEffectBusFX()
 	{
 		return emplaceAudioEffectBusImpl(false);
