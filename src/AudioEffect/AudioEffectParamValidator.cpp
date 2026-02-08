@@ -334,20 +334,39 @@ namespace ksmaudio::AudioEffect
 			onMax = value;
 		}
 
-		// 各値をバリデーション
+		// 空文字列チェック
 		ValidationResult result;
 
-		if (!off.empty())
+		if (off.empty())
 		{
-			result = ValidateSingleValue(type, off);
-			if (!result.isValid)
-			{
-				result.errorMessage = "Off value: " + result.errorMessage;
-				return result;
-			}
+			result.isValid = false;
+			result.errorMessage = "Off value cannot be empty";
+			return result;
 		}
 
-		if (!onMin.empty() && onMin != off)
+		if (onMin.empty())
+		{
+			result.isValid = false;
+			result.errorMessage = "OnMin value cannot be empty";
+			return result;
+		}
+
+		if (onMax.empty())
+		{
+			result.isValid = false;
+			result.errorMessage = "OnMax value cannot be empty";
+			return result;
+		}
+
+		// 各値をバリデーション
+		result = ValidateSingleValue(type, off);
+		if (!result.isValid)
+		{
+			result.errorMessage = "Off value: " + result.errorMessage;
+			return result;
+		}
+
+		if (onMin != off)
 		{
 			result = ValidateSingleValue(type, onMin);
 			if (!result.isValid)
@@ -357,7 +376,7 @@ namespace ksmaudio::AudioEffect
 			}
 		}
 
-		if (!onMax.empty() && onMax != onMin && onMax != off)
+		if (onMax != onMin && onMax != off)
 		{
 			result = ValidateSingleValue(type, onMax);
 			if (!result.isValid)
