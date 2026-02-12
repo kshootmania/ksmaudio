@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "ksmaudio/AudioEffect/AudioEffect.hpp"
 #include "ksmaudio/AudioEffect/Params/PhaserParams.hpp"
 #include "ksmaudio/AudioEffect/detail/RingBuffer.hpp"

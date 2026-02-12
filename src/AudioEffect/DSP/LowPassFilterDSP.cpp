@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/DSP/LowPassFilterDSP.hpp"
+#include "ksmaudio/AudioEffect/DSP/LowPassFilterDSP.hpp"
 
 namespace ksmaudio::AudioEffect
 {

@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/AudioEffectParam.hpp"
+#include "ksmaudio/AudioEffect/AudioEffectParam.hpp"
 #include <string>
 #include <algorithm>
 #include <stdexcept>

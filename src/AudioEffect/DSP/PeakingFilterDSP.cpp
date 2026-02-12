@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/DSP/PeakingFilterDSP.hpp"
+#include "ksmaudio/AudioEffect/DSP/PeakingFilterDSP.hpp"
 #include <algorithm>
 #include <utility>
 

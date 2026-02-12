@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/DSP/GateDSP.hpp"
+#include "ksmaudio/AudioEffect/DSP/GateDSP.hpp"
 #include <cmath>
 
 namespace ksmaudio::AudioEffect

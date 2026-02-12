@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/AudioEffectBus.hpp"
+#include "ksmaudio/AudioEffect/AudioEffectBus.hpp"
 
 namespace ksmaudio::AudioEffect
 {

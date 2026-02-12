@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/ksmaudio.hpp"
+#include "ksmaudio/ksmaudio.hpp"
 #include "bass.h"
 
 namespace ksmaudio

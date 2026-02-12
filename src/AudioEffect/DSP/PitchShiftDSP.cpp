@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/DSP/PitchShiftDSP.hpp"
+#include "ksmaudio/AudioEffect/DSP/PitchShiftDSP.hpp"
 #include <cmath>
 #include <algorithm>
 #include <cassert>

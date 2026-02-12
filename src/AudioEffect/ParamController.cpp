@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/ParamController.hpp"
+#include "ksmaudio/AudioEffect/ParamController.hpp"
 #include <utility>
 
 namespace ksmaudio::AudioEffect

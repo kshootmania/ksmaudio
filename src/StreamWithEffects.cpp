@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/StreamWithEffects.hpp"
+#include "ksmaudio/StreamWithEffects.hpp"
 
 namespace ksmaudio
 {

@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/DSP/SidechainDSP.hpp"
+#include "ksmaudio/AudioEffect/DSP/SidechainDSP.hpp"
 #include <cmath>
 
 namespace ksmaudio::AudioEffect

@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/Stream.hpp"
+#include "ksmaudio/Stream.hpp"
 #include <fstream>
 #include <optional>
 #include "ksmaudio/ksmaudio.hpp"

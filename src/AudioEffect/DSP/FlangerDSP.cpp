@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/DSP/FlangerDSP.hpp"
+#include "ksmaudio/AudioEffect/DSP/FlangerDSP.hpp"
 
 namespace ksmaudio::AudioEffect
 {

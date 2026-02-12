@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <set>
 
 namespace ksmaudio::AudioEffect::detail

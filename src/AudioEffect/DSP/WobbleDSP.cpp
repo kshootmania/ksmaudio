@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/DSP/WobbleDSP.hpp"
+#include "ksmaudio/AudioEffect/DSP/WobbleDSP.hpp"
 #include <cmath>
 
 namespace ksmaudio::AudioEffect

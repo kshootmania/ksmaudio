@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/DSP/TapestopDSP.hpp"
+#include "ksmaudio/AudioEffect/DSP/TapestopDSP.hpp"
 #include <cmath>
 
 namespace ksmaudio::AudioEffect

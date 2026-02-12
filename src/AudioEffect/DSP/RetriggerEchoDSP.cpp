@@ -1,4 +1,4 @@
-﻿#include "ksmaudio/AudioEffect/DSP/RetriggerEchoDSP.hpp"
+#include "ksmaudio/AudioEffect/DSP/RetriggerEchoDSP.hpp"
 #include <utility>
 
 namespace ksmaudio::AudioEffect
