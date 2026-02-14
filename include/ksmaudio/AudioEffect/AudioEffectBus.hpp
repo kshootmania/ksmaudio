@@ -5,6 +5,7 @@
 #include <map>
 #include <unordered_set>
 #include <unordered_map>
+#include <iostream>
 #include <concepts>
 #include "bass.h"
 #include "AudioEffect.hpp"
@@ -54,7 +55,7 @@ namespace ksmaudio::AudioEffect
 		{
 			if (m_nameIdxDict.contains(name))
 			{
-				assert(false && "There is already an audio effect of the same name");
+				std::cerr << "[ksmaudio warning] There is already an audio effect of the same name: " << name << std::endl;
 				return;
 			}
 
