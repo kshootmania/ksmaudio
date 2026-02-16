@@ -1,10 +1,17 @@
 #include "ksmaudio/Stream.hpp"
+#include <filesystem>
 #include <fstream>
 #include <optional>
 #include "ksmaudio/ksmaudio.hpp"
 
 namespace
 {
+	std::filesystem::path U8Path(const std::string& utf8Str)
+	{
+		return std::filesystem::path(
+			std::u8string_view(reinterpret_cast<const char8_t*>(utf8Str.data()), utf8Str.size()));
+	}
+
 	// コンプレッサーのパラメータ値
 	// HSP版: https://github.com/m4saka/kshootmania-v1-hsp/blob/461901f1e925cb8cb474fd02726084cfca9ec3d4/kshootmania.hsp#L792
 	// (音割れ改善のためにHSP版から変更している)
@@ -32,7 +39,7 @@ namespace
 
 	std::unique_ptr<std::vector<char>> Preload(const std::string& filePath)
 	{
-		std::ifstream ifs(filePath, std::ios::in | std::ios::binary);
+		std::ifstream ifs(U8Path(filePath), std::ios::in | std::ios::binary);
 		if (!ifs)
 		{
 			return nullptr;
@@ -51,7 +58,8 @@ namespace
 		const DWORD decodeFlag = forTempo ? BASS_STREAM_DECODE : 0;
 		if (pPreloadedBinary == nullptr)
 		{
-			return BASS_StreamCreateFile(FALSE, filePath.c_str(), 0, 0, BASS_STREAM_PRESCAN | loopFlag | decodeFlag);
+			const auto fsPath = U8Path(filePath);
+			return BASS_StreamCreateFile(FALSE, fsPath.c_str(), 0, 0, BASS_STREAM_PRESCAN | loopFlag | decodeFlag);
 		}
 		else
 		{

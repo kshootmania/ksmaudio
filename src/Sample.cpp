@@ -1,13 +1,21 @@
 #include "ksmaudio/Sample.hpp"
 #include <cassert>
+#include <filesystem>
 #include <utility>
 
 namespace
 {
+	std::filesystem::path U8Path(const std::string& utf8Str)
+	{
+		return std::filesystem::path(
+			std::u8string_view(reinterpret_cast<const char8_t*>(utf8Str.data()), utf8Str.size()));
+	}
+
 	HSAMPLE LoadSample(const std::string& filePath, DWORD maxPolyphony)
 	{
 		assert(1 <= maxPolyphony && maxPolyphony <= 65535);
-		return BASS_SampleLoad(FALSE, filePath.c_str(), 0, 0, maxPolyphony, BASS_SAMPLE_OVER_POS);
+		const auto fsPath = U8Path(filePath);
+		return BASS_SampleLoad(FALSE, fsPath.c_str(), 0, 0, maxPolyphony, BASS_SAMPLE_OVER_POS);
 	}
 }
 
