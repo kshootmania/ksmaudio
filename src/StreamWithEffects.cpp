@@ -9,8 +9,8 @@ namespace ksmaudio
 		return m_audioEffectBuses.emplace_back(std::make_unique<AudioEffect::AudioEffectBus>(isLaser, &m_stream)).get();
 	}
 
-	StreamWithEffects::StreamWithEffects(const std::string& filePath, double volume, bool enableCompressor, bool preload, double playbackSpeed)
-		: m_stream(filePath, volume, enableCompressor, preload, false, playbackSpeed)
+	StreamWithEffects::StreamWithEffects(const std::string& filePath, double volume, bool enableCompressor, bool preload, double playbackSpeed, bool decode)
+		: m_stream(filePath, volume, enableCompressor, preload, false, playbackSpeed, decode)
 	{
 	}
 
@@ -92,6 +92,11 @@ namespace ksmaudio
 	bool StreamWithEffects::isPlaying() const
 	{
 		return m_stream.isPlaying();
+	}
+
+	DWORD StreamWithEffects::getData(void* buffer, DWORD length) const
+	{
+		return m_stream.getData(buffer, length);
 	}
 
 	AudioEffect::AudioEffectBus* StreamWithEffects::emplaceAudioEffectBusFX()

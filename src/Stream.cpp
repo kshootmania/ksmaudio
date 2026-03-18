@@ -52,18 +52,19 @@ namespace
 		return binary;
 	}
 
-	HSTREAM LoadStream(const std::string& filePath, const std::vector<char>* pPreloadedBinary, bool loop, bool forTempo)
+	HSTREAM LoadStream(const std::string& filePath, const std::vector<char>* pPreloadedBinary, bool loop, bool forTempo, bool decode)
 	{
 		const DWORD loopFlag = loop ? BASS_SAMPLE_LOOP : 0;
-		const DWORD decodeFlag = forTempo ? BASS_STREAM_DECODE : 0;
+		const DWORD decodeFlag = (forTempo || decode) ? BASS_STREAM_DECODE : 0;
+		const DWORD floatFlag = decode ? BASS_SAMPLE_FLOAT : 0;
 		if (pPreloadedBinary == nullptr)
 		{
 			const auto fsPath = U8Path(filePath);
-			return BASS_StreamCreateFile(FALSE, fsPath.c_str(), 0, 0, BASS_STREAM_PRESCAN | loopFlag | decodeFlag);
+			return BASS_StreamCreateFile(FALSE, fsPath.c_str(), 0, 0, BASS_STREAM_PRESCAN | loopFlag | decodeFlag | floatFlag);
 		}
 		else
 		{
-			return BASS_StreamCreateFile(TRUE, pPreloadedBinary->data(), 0, static_cast<QWORD>(pPreloadedBinary->size()), BASS_STREAM_PRESCAN | loopFlag | decodeFlag);
+			return BASS_StreamCreateFile(TRUE, pPreloadedBinary->data(), 0, static_cast<QWORD>(pPreloadedBinary->size()), BASS_STREAM_PRESCAN | loopFlag | decodeFlag | floatFlag);
 		}
 	}
 
@@ -94,29 +95,29 @@ namespace ksmaudio
 {
 	namespace
 	{
-		std::optional<HSTREAM> CreateSourceStream(const std::vector<char>* pPreloadedBinary, const std::string& filePath, bool loop, double playbackSpeed)
+		std::optional<HSTREAM> CreateSourceStream(const std::vector<char>* pPreloadedBinary, const std::string& filePath, bool loop, double playbackSpeed, bool decode)
 		{
 			if (playbackSpeed != 1.0)
 			{
-				return LoadStream(filePath, pPreloadedBinary, loop, true);
+				return LoadStream(filePath, pPreloadedBinary, loop, true, decode);
 			}
 			return std::nullopt;
 		}
 
-		HSTREAM CreateMainStream(std::optional<HSTREAM> hStreamSource, const std::vector<char>* pPreloadedBinary, const std::string& filePath, bool loop, double playbackSpeed)
+		HSTREAM CreateMainStream(std::optional<HSTREAM> hStreamSource, const std::vector<char>* pPreloadedBinary, const std::string& filePath, bool loop, double playbackSpeed, bool decode)
 		{
 			if (hStreamSource.has_value())
 			{
 				return CreateTempoStream(hStreamSource.value(), playbackSpeed);
 			}
-			return LoadStream(filePath, pPreloadedBinary, loop, false);
+			return LoadStream(filePath, pPreloadedBinary, loop, false, decode);
 		}
 	}
 
-	Stream::Stream(const std::string& filePath, double volume, bool enableCompressor, bool preload, bool loop, double playbackSpeed)
+	Stream::Stream(const std::string& filePath, double volume, bool enableCompressor, bool preload, bool loop, double playbackSpeed, bool decode)
 		: m_preloadedBinary(preload ? Preload(filePath) : nullptr)
-		, m_hStreamSource(CreateSourceStream(m_preloadedBinary.get(), filePath, loop, playbackSpeed))
-		, m_hStream(CreateMainStream(m_hStreamSource, m_preloadedBinary.get(), filePath, loop, playbackSpeed))
+		, m_hStreamSource(CreateSourceStream(m_preloadedBinary.get(), filePath, loop, playbackSpeed, decode))
+		, m_hStream(CreateMainStream(m_hStreamSource, m_preloadedBinary.get(), filePath, loop, playbackSpeed, decode))
 		, m_playbackSpeed(playbackSpeed)
 		, m_info(GetChannelInfo(m_hStream))
 		, m_volume(volume)
@@ -334,5 +335,10 @@ namespace ksmaudio
 	void Stream::lockEnd() const
 	{
 		BASS_ChannelLock(m_hStream, FALSE);
+	}
+
+	DWORD Stream::getData(void* buffer, DWORD length) const
+	{
+		return BASS_ChannelGetData(m_hStream, buffer, length);
 	}
 }
