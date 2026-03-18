@@ -28,7 +28,7 @@ namespace ksmaudio
 		void applyVolume();
 
 	public:
-		explicit Stream(const std::string& filePath, double volume = 1.0, bool enableCompressor = false, bool preload = false, bool loop = false, double playbackSpeed = 1.0);
+		explicit Stream(const std::string& filePath, double volume = 1.0, bool enableCompressor = false, bool preload = false, bool loop = false, double playbackSpeed = 1.0, bool decode = false);
 
 		~Stream();
 
@@ -87,5 +87,7 @@ namespace ksmaudio
 		void lockBegin() const;
 
 		void lockEnd() const;
+
+		DWORD getData(void* buffer, DWORD length) const;
 	};
 }

@@ -15,7 +15,7 @@ namespace ksmaudio
 		AudioEffect::AudioEffectBus* emplaceAudioEffectBusImpl(bool isLaser);
 
 	public:
-		explicit StreamWithEffects(const std::string& filePath, double volume = 1.0, bool enableCompressor = false, bool preload = false, double playbackSpeed = 1.0);
+		explicit StreamWithEffects(const std::string& filePath, double volume = 1.0, bool enableCompressor = false, bool preload = false, double playbackSpeed = 1.0, bool decode = false);
 
 		StreamWithEffects(const StreamWithEffects&) = delete;
 
@@ -56,6 +56,8 @@ namespace ksmaudio
 		void setMuted(bool muted);
 
 		bool isPlaying() const;
+
+		DWORD getData(void* buffer, DWORD length) const;
 
 		// Note: The pointer is valid until this StreamWithEffects instance is destroyed.
 		AudioEffect::AudioEffectBus* emplaceAudioEffectBusFX();
