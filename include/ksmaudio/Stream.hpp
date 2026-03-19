@@ -23,6 +23,7 @@ namespace ksmaudio
 		BASS_CHANNELINFO m_info;
 		double m_volume;
 		bool m_muted;
+		bool m_decode;
 		HFX m_hVolumeAmplifyFX = 0; // 100%超音量用のBASS_FX_BFX_VOLUMEエフェクト
 
 		void applyVolume();

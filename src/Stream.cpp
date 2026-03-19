@@ -122,6 +122,7 @@ namespace ksmaudio
 		, m_info(GetChannelInfo(m_hStream))
 		, m_volume(volume)
 		, m_muted(false)
+		, m_decode(decode)
 	{
 		// 音量を設定
 		applyVolume();
@@ -148,7 +149,17 @@ namespace ksmaudio
 
 	void Stream::applyVolume()
 	{
-		if (m_volume > 1.0)
+		if (m_decode)
+		{
+			// decodeモードではBASS_ATTRIB_VOLが効かないため、BASS_FX_BFX_VOLUMEで制御
+			if (m_hVolumeAmplifyFX == 0)
+			{
+				m_hVolumeAmplifyFX = BASS_ChannelSetFX(m_hStream, BASS_FX_BFX_VOLUME, kVolumeAmplifyFXPriority);
+			}
+			const BASS_BFX_VOLUME params{ .lChannel = BASS_BFX_CHANALL, .fVolume = static_cast<float>(m_volume) };
+			BASS_FXSetParameters(m_hVolumeAmplifyFX, &params);
+		}
+		else if (m_volume > 1.0)
 		{
 			// 100%超の場合はBASS_FX_BFX_VOLUMEエフェクトで増幅
 			if (m_hVolumeAmplifyFX == 0)
