@@ -89,6 +89,6 @@ namespace ksmaudio
 
 		void lockEnd() const;
 
-		DWORD getData(void* buffer, DWORD length) const;
+		DWORD getData(void* buffer, DWORD length);
 	};
 }

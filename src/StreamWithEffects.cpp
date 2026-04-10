@@ -94,7 +94,7 @@ namespace ksmaudio
 		return m_stream.isPlaying();
 	}
 
-	DWORD StreamWithEffects::getData(void* buffer, DWORD length) const
+	DWORD StreamWithEffects::getData(void* buffer, DWORD length)
 	{
 		return m_stream.getData(buffer, length);
 	}

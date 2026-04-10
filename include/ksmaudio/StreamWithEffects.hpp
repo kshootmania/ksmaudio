@@ -57,7 +57,7 @@ namespace ksmaudio
 
 		bool isPlaying() const;
 
-		DWORD getData(void* buffer, DWORD length) const;
+		DWORD getData(void* buffer, DWORD length);
 
 		// Note: The pointer is valid until this StreamWithEffects instance is destroyed.
 		AudioEffect::AudioEffectBus* emplaceAudioEffectBusFX();

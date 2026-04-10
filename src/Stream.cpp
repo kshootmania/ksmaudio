@@ -348,7 +348,7 @@ namespace ksmaudio
 		BASS_ChannelLock(m_hStream, FALSE);
 	}
 
-	DWORD Stream::getData(void* buffer, DWORD length) const
+	DWORD Stream::getData(void* buffer, DWORD length)
 	{
 		return BASS_ChannelGetData(m_hStream, buffer, length);
 	}
