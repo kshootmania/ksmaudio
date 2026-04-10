@@ -300,7 +300,18 @@ namespace ksmaudio
 	void Stream::setMuted(bool muted)
 	{
 		m_muted = muted;
-		if (muted)
+		if (m_decode)
+		{
+			// decodeモードではBASS_ATTRIB_VOLが効かないため、BASS_FX_BFX_VOLUMEで制御
+			if (m_hVolumeAmplifyFX == 0)
+			{
+				m_hVolumeAmplifyFX = BASS_ChannelSetFX(m_hStream, BASS_FX_BFX_VOLUME, kVolumeAmplifyFXPriority);
+			}
+			const float vol = muted ? 0.0f : static_cast<float>(m_volume);
+			const BASS_BFX_VOLUME params{ .lChannel = BASS_BFX_CHANALL, .fVolume = vol };
+			BASS_FXSetParameters(m_hVolumeAmplifyFX, &params);
+		}
+		else if (muted)
 		{
 			BASS_ChannelSetAttribute(m_hStream, BASS_ATTRIB_VOL, 0.0f);
 		}
