@@ -75,7 +75,9 @@ namespace ksmaudio::AudioEffect
             for (std::size_t ch = 0U; ch < m_info.numChannels; ++ch)
             {
                 m_lowPassFilters[ch].setLowPassFilter(freq, params.q, m_info.sampleRateFloat);
-                *pData = m_lowPassFilters[ch].process(*pData);
+                const float dry = *pData;
+                const float wet = m_lowPassFilters[ch].process(dry);
+                *pData = std::lerp(dry, wet, params.mix);
                 ++pData;
             }
             m_triggerHandler.advance();
