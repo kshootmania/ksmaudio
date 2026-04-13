@@ -55,7 +55,7 @@ namespace ksmaudio::AudioEffect
 				.gainRate = GetValue(gain, status, isOn),
 				.bandwidth = GetValue(bandwidth, status, isOn),
 				.mix = GetValue(mix, status, isOn),
-				.releaseEnabled = true, // LASERでは余韻を有効にする TODO: p/fp音源が指定されていてp/fp音源の音声ファイルが存在せず自動エフェクトになった場合は余韻を入れない
+				.releaseEnabled = true, // LASERでは有効。v1ではp/fp音源からリアルタイムエフェクトへのフォールバック時は余韻無効化していたが、差異が軽微のためv2では常に有効とする
 			};
 		}
 	};
