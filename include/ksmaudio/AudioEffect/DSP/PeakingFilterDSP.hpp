@@ -21,9 +21,9 @@ namespace ksmaudio::AudioEffect
 		public:
 			PeakingFilterValueController();
 
-			void updateGain(float v);
+			void updateGain(float v, float vAtFreq, float vAtFreqMax);
 
-			void updateFreq(float v);
+			void updateFreq(float v, float vAtFreq, float vAtFreqMax);
 
 			bool popUpdated();
 
@@ -71,6 +71,10 @@ namespace ksmaudio::AudioEffect
 		std::array<detail::BiquadFilter<float>, 2> m_peakingFilters;
 		detail::PeakingFilterValueController m_valueController;
 		detail::PeakingFilterRelease m_release;
+		float m_prevFreq = 50.0f;
+		float m_prevFreqMax = 9000.0f;
+		float m_prevVAtFreq = 0.0f;
+		float m_prevVAtFreqMax = 1.0f;
 
 	public:
 		explicit PeakingFilterDSP(const DSPCommonInfo& info);
