@@ -118,8 +118,8 @@ namespace ksmaudio::AudioEffect
 		// peaking_filter
 		const std::vector<ParamSpec> s_peakingFilterParams = {
 			{ ParamID::kV, "v", Type::kRate, "0%-100%" },
-			{ ParamID::kFreq, "freq", Type::kFreq, "1000Hz" },
-			{ ParamID::kFreqMax, "freq_max", Type::kFreq, "10000Hz" },
+			{ ParamID::kFreq, "freq", Type::kFreq, "50Hz" },
+			{ ParamID::kFreqMax, "freq_max", Type::kFreq, "9000Hz" },
 			{ ParamID::kBandwidth, "bandwidth", Type::kFloat, "0.5" },
 			{ ParamID::kGain, "gain", Type::kRate, "50%" },
 			{ ParamID::kMix, "mix", Type::kRate, "0%>100%" },
@@ -128,8 +128,8 @@ namespace ksmaudio::AudioEffect
 		// high_pass_filter
 		const std::vector<ParamSpec> s_highPassFilterParams = {
 			{ ParamID::kV, "v", Type::kRate, "0%-100%" },
-			{ ParamID::kFreq, "freq", Type::kFreq, "1000Hz" },
-			{ ParamID::kFreqMax, "freq_max", Type::kFreq, "12000Hz" },
+			{ ParamID::kFreq, "freq", Type::kFreq, "100Hz" },
+			{ ParamID::kFreqMax, "freq_max", Type::kFreq, "2200Hz" },
 			{ ParamID::kQ, "q", Type::kFloat, "1.414" },
 			{ ParamID::kMix, "mix", Type::kRate, "0%>100%" },
 		};
@@ -137,8 +137,8 @@ namespace ksmaudio::AudioEffect
 		// low_pass_filter
 		const std::vector<ParamSpec> s_lowPassFilterParams = {
 			{ ParamID::kV, "v", Type::kRate, "0%-100%" },
-			{ ParamID::kFreq, "freq", Type::kFreq, "10000Hz" },
-			{ ParamID::kFreqMax, "freq_max", Type::kFreq, "1000Hz" },
+			{ ParamID::kFreq, "freq", Type::kFreq, "15000Hz" },
+			{ ParamID::kFreqMax, "freq_max", Type::kFreq, "800Hz" },
 			{ ParamID::kQ, "q", Type::kFloat, "1.414" },
 			{ ParamID::kMix, "mix", Type::kRate, "0%>100%" },
 		};

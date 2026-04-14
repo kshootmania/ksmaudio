@@ -12,6 +12,10 @@ namespace ksmaudio::AudioEffect
 		const DSPCommonInfo m_info;
 		std::array<detail::BiquadFilter<float>, 2> m_lowPassFilters;
 		detail::LinearEasing<float> m_vEasing;
+		float m_prevFreq = 15000.0f;
+		float m_prevFreqMax = 800.0f;
+		float m_prevVAtFreq = 0.0f;
+		float m_prevVAtFreqMax = 1.0f;
 
 	public:
 		explicit LowPassFilterDSP(const DSPCommonInfo& info);

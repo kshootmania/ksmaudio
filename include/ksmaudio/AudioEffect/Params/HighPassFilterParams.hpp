@@ -9,23 +9,24 @@ namespace ksmaudio::AudioEffect
 	struct HighPassFilterDSPParams
 	{
 		float v = 0.0f;
+		float freq = 100.0f;
+		float freqMax = 2200.0f;
 		float q = 5.0f;
 		float mix = 1.0f;
 	};
 
 	struct HighPassFilterParams
 	{
-		// TODO: freq、freq_maxの値を変更可能にする
 		Param v = DefineParam(Type::kRate, "0%-100%");
-		//Param freq = DefineParam(Type::kFreq, "100Hz");
-		//Param freqMax = DefineParam(Type::kFreq, "4600Hz");
+		Param freq = DefineParam(Type::kFreq, "100Hz");
+		Param freqMax = DefineParam(Type::kFreq, "2200Hz");
 		Param q = DefineParam(Type::kFloat, "5.0");
 		Param mix = DefineParam(Type::kRate, "0%>100%");
 
 		const std::unordered_map<ParamID, Param*> dict = {
 			{ ParamID::kV, &v },
-			//{ ParamID::kFreq, &freq },
-			//{ ParamID::kFreqMax, &freqMax },
+			{ ParamID::kFreq, &freq },
+			{ ParamID::kFreqMax, &freqMax },
 			{ ParamID::kQ, &q },
 			{ ParamID::kMix, &mix },
 		};
@@ -34,6 +35,8 @@ namespace ksmaudio::AudioEffect
 		{
 			return {
 				.v = GetValue(v, status, isOn),
+				.freq = GetValue(freq, status, isOn),
+				.freqMax = GetValue(freqMax, status, isOn),
 				.q = GetValue(q, status, isOn),
 				.mix = GetValue(mix, status, isOn),
 			};
