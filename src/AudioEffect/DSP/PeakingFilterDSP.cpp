@@ -17,7 +17,7 @@ namespace ksmaudio::AudioEffect
 		constexpr float kFilterReleaseSec = 0.05f;
 
 		// HSP版の計算式から事前計算した周波数テーブル
-		// https://github.com/m4saka/kshootmania-v1-hsp/blob/08275836547c7792a6d4f59037e56e947f2979c3/src/scene/play/play_audio_effects.hsp#L974
+		// HSP版: https://github.com/kshootmania/ksm-v1/blob/08275836547c7792a6d4f59037e56e947f2979c3/src/scene/play/play_audio_effects.hsp#L974
 		constexpr float kFreqTable[detail::kFreqTableSize] = {
 			50.0000f, 50.1190f, 50.4762f, 51.0714f, 51.9046f, 52.9758f, 54.2850f, 55.8320f,
 			57.6169f, 59.6395f, 61.8997f, 64.3974f, 67.1325f, 70.1048f, 73.3143f, 76.7608f,
@@ -53,7 +53,8 @@ namespace ksmaudio::AudioEffect
 			8347.2783f, 8440.6076f, 8533.9116f, 8627.1888f, 8720.4376f, 8813.6567f, 8906.8447f, 9000.0000f,
 		};
 
-		// HSP版の計算式を基に事前計算したgainテーブル(dB単位)
+		// HSP版の計算式から事前計算したgainテーブル(dB単位)
+		// HSP版: https://github.com/kshootmania/ksm-v1/blob/08275836547c7792a6d4f59037e56e947f2979c3/src/scene/play/play_audio_effects.hsp#L974
 		constexpr float kGainTable[detail::kFreqTableSize] = {
 			0.0000f, 0.7994f, 1.5987f, 2.3981f, 3.1974f, 3.9968f, 4.7961f, 5.5955f,
 			6.3948f, 7.1942f, 7.9936f, 8.7929f, 9.5923f, 10.3916f, 11.1910f, 11.9903f,

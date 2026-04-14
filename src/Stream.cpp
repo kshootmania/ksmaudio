@@ -13,7 +13,7 @@ namespace
 	}
 
 	// コンプレッサーのパラメータ値
-	// HSP版: https://github.com/m4saka/kshootmania-v1-hsp/blob/461901f1e925cb8cb474fd02726084cfca9ec3d4/kshootmania.hsp#L792
+	// HSP版: https://github.com/kshootmania/ksm-v1/blob/461901f1e925cb8cb474fd02726084cfca9ec3d4/kshootmania.hsp#L792
 	// (音割れ改善のためにHSP版から変更している)
 	constexpr BASS_BFX_COMPRESSOR2 kCompressorFXParams
 	{

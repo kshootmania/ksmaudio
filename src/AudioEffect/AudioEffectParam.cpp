@@ -50,7 +50,7 @@ namespace ksmaudio::AudioEffect
 		}
 	}
 
-	// Implementation in HSP: https://github.com/m4saka/kshootmania-v1-hsp/blob/19bfb6acbec8abd304b2e7dae6009df8e8e1f66f/src/scene/play/play_utils.hsp#L405
+	// HSP版: https://github.com/kshootmania/ksm-v1/blob/19bfb6acbec8abd304b2e7dae6009df8e8e1f66f/src/scene/play/play_utils.hsp#L405
 	float StrToValue(Type type, const std::string& str, bool* pSuccess)
 	{
 		if (pSuccess != nullptr)

@@ -38,7 +38,7 @@ namespace ksmaudio::AudioEffect
 		// フィルタが無効になってから50msの間は、無効になる直前の値を使用してgainを減少させつつフィルタ適用する
 		// LASERノーツ直後に"シュワ"という音を出すこと、およびLASER判定が一瞬外れた際にもフィルタが途切れないことを目的としている
 		//
-		// HSP版の該当箇所: https://github.com/m4saka/kshootmania-v1-hsp/blob/1c75880b545d1232eeffc4bb3fc19704a3622f73/src/scene/play/play_audio_effects.hsp#L901
+		// HSP版の該当箇所: https://github.com/kshootmania/ksm-v1/blob/1c75880b545d1232eeffc4bb3fc19704a3622f73/src/scene/play/play_audio_effects.hsp#L901
 		// (HSP版では余韻のロジックを使い回して直角判定後にgainを増幅する操作も入っているが、効果が薄いことと処理が複雑になるためC++版では廃止)
 		class PeakingFilterRelease
 		{

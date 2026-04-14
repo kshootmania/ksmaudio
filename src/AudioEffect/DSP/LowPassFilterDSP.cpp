@@ -13,7 +13,7 @@ namespace ksmaudio::AudioEffect
 		constexpr float kFreqThresholdMax = 14800.0f;
 
 		// HSP版の計算式から事前計算した周波数テーブル
-		// https://github.com/m4saka/kshootmania-v1-hsp/blob/08275836547c7792a6d4f59037e56e947f2979c3/src/scene/play/play_audio_effects.hsp#L957
+		// HSP版: https://github.com/kshootmania/ksm-v1/blob/08275836547c7792a6d4f59037e56e947f2979c3/src/scene/play/play_audio_effects.hsp#L957
 		constexpr float kFreqTable[detail::kFreqTableSize] = {
 			15000.0000f, 14889.7005f, 14779.4103f, 14669.1387f, 14558.8948f, 14448.6880f, 14338.5275f, 14228.4226f,
 			14118.3825f, 14008.4164f, 13898.5335f, 13788.7429f, 13679.0539f, 13569.4756f, 13460.0171f, 13350.6874f,
