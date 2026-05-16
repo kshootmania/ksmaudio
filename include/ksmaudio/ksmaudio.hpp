@@ -11,9 +11,17 @@ namespace ksmaudio
 	constexpr DWORD kUpdatePeriodMs = 100;
 	constexpr DWORD kUpdateThreads = 2;
 
-	void Init(void* hWnd);
+	/// @brief 音声処理を初期化
+	/// @param hWnd Windowsの場合はメインウィンドウのHWND、それ以外ではnullptr
+	/// @return 成功時true、失敗時false(失敗時はGetLastErrorCode()でBASSエラーコードを取得可能)
+	[[nodiscard]]
+	bool Init(void* hWnd);
 
 	void Terminate();
+
+	/// @brief 直前のBASS関数のエラーコード(BASS_ErrorGetCode)を取得
+	[[nodiscard]]
+	int GetLastErrorCode();
 
 	void SetMute(bool isMute);
 
