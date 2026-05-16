@@ -23,6 +23,10 @@ namespace ksmaudio
 	[[nodiscard]]
 	int GetLastErrorCode();
 
+	/// @brief WindowsでDirectSound初期化に失敗し、WASAPI相当のデフォルト初期化にフォールバックしたか
+	[[nodiscard]]
+	bool IsWasapiFallbackUsed();
+
 	void SetMute(bool isMute);
 
 	/// @brief マスターボリュームを設定

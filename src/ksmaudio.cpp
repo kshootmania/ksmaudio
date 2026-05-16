@@ -7,6 +7,7 @@ namespace ksmaudio
 	{
 		double s_masterVolume = 1.0;
 		bool s_isMuted = false;
+		bool s_isWasapiFallbackUsed = false;
 
 		void ApplyVolume()
 		{
@@ -18,9 +19,19 @@ namespace ksmaudio
 
 	bool Init(void* hWnd)
 	{
+		s_isWasapiFallbackUsed = false;
 #ifdef _WIN32
 		// BASS 2.4.13以降はWindowsでWASAPIがデフォルトになったが、音声がズレるためDirectSoundを明示的に指定
-		const BOOL ok = BASS_Init(-1/* default device */, kSampleRate, BASS_DEVICE_DSOUND, static_cast<HWND>(hWnd), nullptr);
+		BOOL ok = BASS_Init(-1/* default device */, kSampleRate, BASS_DEVICE_DSOUND, static_cast<HWND>(hWnd), nullptr);
+		if (!ok)
+		{
+			// 初期化失敗時はDirectSound指定を外して再試行
+			ok = BASS_Init(-1/* default device */, kSampleRate, 0, static_cast<HWND>(hWnd), nullptr);
+			if (ok)
+			{
+				s_isWasapiFallbackUsed = true;
+			}
+		}
 #else
 		(void)hWnd;
 		const BOOL ok = BASS_Init(-1/* default device */, kSampleRate, 0, 0, nullptr);
@@ -51,6 +62,11 @@ namespace ksmaudio
 	int GetLastErrorCode()
 	{
 		return BASS_ErrorGetCode();
+	}
+
+	bool IsWasapiFallbackUsed()
+	{
+		return s_isWasapiFallbackUsed;
 	}
 
 	void SetMute(bool isMute)
