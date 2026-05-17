@@ -89,6 +89,21 @@ namespace
 		const auto pData = reinterpret_cast<float*>(buffer);
 		pAudioEffect->process(pData, length / sizeof(float));
 	}
+
+#if defined(_WIN32)
+	double OutputDeviceLatencySec()
+	{
+		static const double latencySec = [] {
+			BASS_INFO info{};
+			if (BASS_GetInfo(&info))
+			{
+				return info.latency / 1000.0;
+			}
+			return 0.0;
+		}();
+		return latencySec;
+	}
+#endif
 }
 
 namespace ksmaudio
@@ -336,10 +351,13 @@ namespace ksmaudio
 	SecondsF Stream::latency() const
 	{
 #if defined(_WIN32)
-		// Windowsの場合はBASS_DATA_AVAILABLEで取得される値の変動が大きいため、バッファサイズを定数で返した方が音声エフェクトのタイミング計算が安定する
-		return SecondsF{ kBufferSizeMs / 1000.0f };
+		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
+		if (playbuf != (DWORD)-1)
+		{
+			return SecondsF{ BASS_ChannelBytes2Seconds(m_hStream, playbuf) + OutputDeviceLatencySec() };
+		}
+		return SecondsF{ OutputDeviceLatencySec() };
 #else
-		// Linux/macOSの場合はBASS_DATA_AVAILABLEで取得される値がバッファサイズと異なるため、取得したものを返す
 		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
 		if (playbuf != (DWORD)-1)
 		{
