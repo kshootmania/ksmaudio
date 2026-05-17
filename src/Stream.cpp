@@ -90,7 +90,6 @@ namespace
 		pAudioEffect->process(pData, length / sizeof(float));
 	}
 
-#if defined(_WIN32)
 	double OutputDeviceLatencySec()
 	{
 		static const double latencySec = [] {
@@ -103,7 +102,6 @@ namespace
 		}();
 		return latencySec;
 	}
-#endif
 }
 
 namespace ksmaudio
@@ -350,21 +348,12 @@ namespace ksmaudio
 
 	SecondsF Stream::latency() const
 	{
-#if defined(_WIN32)
 		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
 		if (playbuf != (DWORD)-1)
 		{
 			return SecondsF{ BASS_ChannelBytes2Seconds(m_hStream, playbuf) + OutputDeviceLatencySec() };
 		}
 		return SecondsF{ OutputDeviceLatencySec() };
-#else
-		DWORD playbuf = BASS_ChannelGetData(m_hStream, NULL, BASS_DATA_AVAILABLE);
-		if (playbuf != (DWORD)-1)
-		{
-			return SecondsF{ BASS_ChannelBytes2Seconds(m_hStream, playbuf) };
-		}
-		return SecondsF{ kBufferSizeMs / 1000.0f };
-#endif
 	}
 
 	void Stream::lockBegin() const
