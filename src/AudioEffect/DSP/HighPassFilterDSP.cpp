@@ -83,6 +83,8 @@ namespace ksmaudio::AudioEffect
 		float scaledV = std::lerp(m_prevVAtFreq, m_prevVAtFreqMax, m_vEasing.value());
 		float freq = detail::FreqTableForwardLookup(kFreqTable, scaledV);
 		bool mixSkipped = isBypassed || freq < kFreqThresholdMin; // 低周波数に対しては適用しない
+		const bool qUpdated = params.q != m_prevQ;
+		m_prevQ = params.q;
 		for (std::size_t i = 0U; i < frameSize; ++i)
 		{
 			// 値が飛ぶことでノイズが入らないようvの値に対して線形のイージングを入れる
@@ -97,7 +99,7 @@ namespace ksmaudio::AudioEffect
 			// 各チャンネルにフィルタを適用
 			for (std::size_t ch = 0U; ch < m_info.numChannels; ++ch)
 			{
-				if (vUpdated)
+				if (vUpdated || (qUpdated && i == 0U))
 				{
 					m_highPassFilters[ch].setHighPassFilter(freq, params.q, m_info.sampleRateFloat);
 				}

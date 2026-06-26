@@ -16,6 +16,7 @@ namespace ksmaudio::AudioEffect
 		float m_prevFreqMax = 800.0f;
 		float m_prevVAtFreq = 0.0f;
 		float m_prevVAtFreqMax = 1.0f;
+		float m_prevQ = 3.6f;
 
 	public:
 		explicit LowPassFilterDSP(const DSPCommonInfo& info);

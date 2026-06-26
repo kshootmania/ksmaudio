@@ -218,6 +218,9 @@ namespace ksmaudio::AudioEffect
 
 		assert(dataSize % m_info.numChannels == 0U);
 		const std::size_t frameSize = dataSize / m_info.numChannels;
+		const bool filterParamsUpdated = params.gainRate != m_prevGainRate || params.bandwidth != m_prevBandwidth;
+		m_prevGainRate = params.gainRate;
+		m_prevBandwidth = params.bandwidth;
 		m_valueController.updateGain(params.v, m_prevVAtFreq, m_prevVAtFreqMax);
 		for (std::size_t i = 0U; i < frameSize; ++i)
 		{
@@ -235,7 +238,7 @@ namespace ksmaudio::AudioEffect
 			else
 			{
 				const bool valueUpdated = m_valueController.popUpdated();
-				if (valueUpdated)
+				if (valueUpdated || (filterParamsUpdated && i == 0U))
 				{
 					// 値が更新された場合はフィルタ係数を更新
 					for (std::size_t ch = 0U; ch < m_info.numChannels; ++ch)

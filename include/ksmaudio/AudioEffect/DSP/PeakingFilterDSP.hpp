@@ -75,6 +75,8 @@ namespace ksmaudio::AudioEffect
 		float m_prevFreqMax = 9000.0f;
 		float m_prevVAtFreq = 0.0f;
 		float m_prevVAtFreqMax = 1.0f;
+		float m_prevGainRate = 0.5f;
+		float m_prevBandwidth = 1.2f;
 
 	public:
 		explicit PeakingFilterDSP(const DSPCommonInfo& info);
