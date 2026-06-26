@@ -7,9 +7,21 @@
 namespace ksmaudio
 {
 	constexpr DWORD kSampleRate = 44100;
-	constexpr DWORD kBufferSizeMs = 200;
-	constexpr DWORD kUpdatePeriodMs = 100;
+
+	// 再生バッファ長(BGM等のHSTREAM/HMUSIC用、サンプルには影響しない)
+	constexpr DWORD kBufferSizeMs = 100;
+
+	// 再生バッファの更新周期
+	constexpr DWORD kUpdatePeriodMs = 5;
+
 	constexpr DWORD kUpdateThreads = 2;
+
+	// デバイスバッファの更新周期(BASS_Initより前に設定する必要がある)
+	// (macOSではデバイスバッファ長がこの2倍になる)
+	constexpr DWORD kDevicePeriodMs = 5;
+
+	// デバイスバッファ長(Windowsのみ有効、BASS_Initより前に設定する必要がある)
+	constexpr DWORD kDeviceBufferMs = 10;
 
 	/// @brief 音声出力バックエンド
 	enum class AudioBackend

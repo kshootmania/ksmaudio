@@ -1,4 +1,5 @@
 #include "ksmaudio/ksmaudio.hpp"
+#include <iostream>
 #include "bass.h"
 
 namespace ksmaudio
@@ -18,6 +19,16 @@ namespace ksmaudio
 
 	bool Init(void* hWnd, AudioBackend audioBackend)
 	{
+		// デバイスバッファ関連はBASS_Initより前に設定する必要がある
+		BASS_SetConfig(BASS_CONFIG_DEV_PERIOD, kDevicePeriodMs);
+#ifdef _WIN32
+		// macOSではBASS_CONFIG_DEV_BUFFERは利用不可(デバイスバッファ長はBASS_CONFIG_DEV_PERIODの2倍になる)
+		BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, kDeviceBufferMs);
+#endif
+
+		// 無音区間の後でも発音までの遅延が生じないようデバイスを止めない
+		BASS_SetConfig(BASS_CONFIG_DEV_NONSTOP, TRUE);
+
 #ifdef _WIN32
 		const DWORD flags = audioBackend == AudioBackend::DirectSound ? BASS_DEVICE_DSOUND : 0;
 		BOOL ok = BASS_Init(-1/* default device */, kSampleRate, flags, static_cast<HWND>(hWnd), nullptr);
@@ -43,6 +54,13 @@ namespace ksmaudio
 		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, kUpdatePeriodMs);
 		BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
 		BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, kUpdateThreads);
+
+		// デバイスのレイテンシとBASS推奨最小バッファ長を診断用に出力する
+		BASS_INFO info{};
+		if (BASS_GetInfo(&info))
+		{
+			std::cerr << "[ksmaudio] device latency=" << info.latency << " ms, minbuf=" << info.minbuf << " ms, freq=" << info.freq << " Hz" << std::endl;
+		}
 
 		// bass_fx.dllをロードするために呼ぶ必要あり(失敗時は0が返る)
 		if (BASS_FX_GetVersion() == 0)
