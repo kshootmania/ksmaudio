@@ -34,7 +34,7 @@ namespace ksmaudio::AudioEffect
 		// gate
 		const std::vector<ParamSpec> s_gateParams = {
 			{ ParamID::kWaveLength, "wave_length", Type::kLength, "0" },
-			{ ParamID::kRate, "rate", Type::kRate, "60%" },
+			{ ParamID::kRate, "rate", Type::kRate, "50%" },
 			{ ParamID::kMix, "mix", Type::kRate, "0%>90%" },
 		};
 
@@ -51,7 +51,7 @@ namespace ksmaudio::AudioEffect
 
 		// pitch_shift
 		const std::vector<ParamSpec> s_pitchShiftParams = {
-			{ ParamID::kPitch, "pitch", Type::kPitch, "0" },
+			{ ParamID::kPitch, "pitch", Type::kPitch, "0>12" },
 			{ ParamID::kChunkSize, "chunk_size", Type::kSample, "700samples" },
 			{ ParamID::kOverlap, "overlap", Type::kRate, "40%" },
 			{ ParamID::kMix, "mix", Type::kRate, "0%>100%" },
@@ -82,7 +82,7 @@ namespace ksmaudio::AudioEffect
 			{ ParamID::kFreq1, "freq_1", Type::kFreq, "500Hz" },
 			{ ParamID::kFreq2, "freq_2", Type::kFreq, "20000Hz" },
 			{ ParamID::kQ, "q", Type::kFloat, "1.414" },
-			{ ParamID::kMix, "mix", Type::kRate, "0%>50%" },
+			{ ParamID::kMix, "mix", Type::kRate, "0%>80%" },
 		};
 
 		// tapestop
@@ -97,7 +97,7 @@ namespace ksmaudio::AudioEffect
 			{ ParamID::kUpdatePeriod, "update_period", Type::kLength, "0" },
 			{ ParamID::kWaveLength, "wave_length", Type::kWaveLength, "0" },
 			{ ParamID::kUpdateTrigger, "update_trigger", Type::kSwitch, "off>on" },
-			{ ParamID::kFeedbackLevel, "feedback_level", Type::kRate, "100%" },
+			{ ParamID::kFeedbackLevel, "feedback_level", Type::kRate, "60%" },
 			{ ParamID::kMix, "mix", Type::kRate, "0%>100%" },
 		};
 

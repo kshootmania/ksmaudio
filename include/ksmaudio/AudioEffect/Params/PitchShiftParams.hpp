@@ -15,7 +15,7 @@ namespace ksmaudio::AudioEffect
 
 	struct PitchShiftParams
 	{
-		Param pitch = DefineParam(Type::kPitch, "0");
+		Param pitch = DefineParam(Type::kPitch, "0>12");
 		Param chunkSize = DefineParam(Type::kSample, "700samples");
 		Param overlap = DefineParam(Type::kRate, "40%");
 		Param mix = DefineParam(Type::kRate, "0%>100%");

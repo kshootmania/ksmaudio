@@ -19,7 +19,7 @@ namespace ksmaudio::AudioEffect
 		Param freq1 = DefineParam(Type::kFreq, "500Hz");
 		Param freq2 = DefineParam(Type::kFreq, "20000Hz");
 		Param q = DefineParam(Type::kFloat, "1.414");
-		Param mix = DefineParam(Type::kRate, "0%>50%");
+		Param mix = DefineParam(Type::kRate, "0%>80%");
 
 		const std::unordered_map<ParamID, Param*> dict = {
 			{ ParamID::kWaveLength, &waveLength },

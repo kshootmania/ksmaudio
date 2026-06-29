@@ -63,7 +63,7 @@ namespace ksmaudio::AudioEffect
 		Param updatePeriod = DefineParam(Type::kLength, "0");
 		Param waveLength = DefineParam(Type::kWaveLength, "0");
 		UpdateTriggerParam updateTrigger = DefineUpdateTriggerParam("off>on");
-		Param feedbackLevel = DefineParam(Type::kRate, "100%");
+		Param feedbackLevel = DefineParam(Type::kRate, "60%");
 		Param mix = DefineParam(Type::kRate, "0%>100%");
 
 		const std::unordered_map<ParamID, Param*> dict = {
