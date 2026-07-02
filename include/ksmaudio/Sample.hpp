@@ -1,13 +1,19 @@
 #pragma once
 #include <string>
-#include "bass.h"
+#include <memory>
+#include "ksmaudio/Backend.hpp"
 
 namespace ksmaudio
 {
 	class Sample
 	{
 	private:
+#ifdef KSMAUDIO_BACKEND_BASS
 		HSAMPLE m_hSample = 0;
+#else
+		class Impl;
+		std::unique_ptr<Impl> m_impl;
+#endif
 
 	public:
 		// Note: filePath must be in UTF-8

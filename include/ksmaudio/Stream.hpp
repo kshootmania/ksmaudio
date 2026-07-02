@@ -4,8 +4,7 @@
 #include <string>
 #include <chrono>
 #include <optional>
-#include "bass.h"
-#include "bass_fx.h"
+#include "ksmaudio/Backend.hpp"
 #include "ksmaudio/AudioEffect/AudioEffect.hpp"
 
 namespace ksmaudio
@@ -16,6 +15,7 @@ namespace ksmaudio
 	class Stream
 	{
 	private:
+#ifdef KSMAUDIO_BACKEND_BASS
 		std::unique_ptr<std::vector<char>> m_preloadedBinary;
 		std::optional<HSTREAM> m_hStreamSource; // テンポ変更時のみ使用
 		HSTREAM m_hStream;
@@ -25,6 +25,10 @@ namespace ksmaudio
 		bool m_muted;
 		bool m_decode;
 		HFX m_hVolumeAmplifyFX = 0; // 100%超音量用のBASS_FX_BFX_VOLUMEエフェクト
+#else
+		class Impl;
+		std::unique_ptr<Impl> m_impl;
+#endif
 
 		void applyVolume();
 
@@ -37,9 +41,16 @@ namespace ksmaudio
 
 		Stream& operator=(const Stream&) = delete;
 
+#ifdef KSMAUDIO_BACKEND_BASS
 		Stream(Stream&&) = default;
 
 		Stream& operator=(Stream&&) = default;
+#else
+		// WebバックエンドではImplが不完全型のため定義はcpp側に置く
+		Stream(Stream&&);
+
+		Stream& operator=(Stream&&);
+#endif
 
 		void play() const;
 
