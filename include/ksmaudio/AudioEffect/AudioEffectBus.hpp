@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <concepts>
-#include "bass.h"
+#include "ksmaudio/Backend.hpp"
 #include "AudioEffect.hpp"
 #include "ParamController.hpp"
 #include "ksmaudio/Stream.hpp"

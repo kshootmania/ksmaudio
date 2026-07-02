@@ -3,7 +3,7 @@
 #include <memory>
 #include <mutex>
 #include <cassert>
-#include "bass.h"
+#include "ksmaudio/Backend.hpp"
 #include "AudioEffectParam.hpp"
 #include "detail/UpdateTriggerTimeline.hpp"
 

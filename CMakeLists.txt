@@ -7,14 +7,34 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
-file(GLOB_RECURSE KSMAUDIO_SOURCES src/*.cpp)
-add_library(ksmaudio STATIC ${KSMAUDIO_SOURCES})
+# バックエンド共通のソース(音声エフェクトDSP等)
+file(GLOB_RECURSE KSMAUDIO_COMMON_SOURCES src/AudioEffect/*.cpp)
+list(APPEND KSMAUDIO_COMMON_SOURCES src/StreamWithEffects.cpp)
+
+if(EMSCRIPTEN)
+    # Webバックエンド(miniaudio)のソース
+    file(GLOB KSMAUDIO_WEB_SOURCES src/Web/*.cpp src/Web/*.c)
+    add_library(ksmaudio STATIC ${KSMAUDIO_COMMON_SOURCES} ${KSMAUDIO_WEB_SOURCES})
+else()
+    # BASSバックエンドのソース
+    add_library(ksmaudio STATIC
+        ${KSMAUDIO_COMMON_SOURCES}
+        src/ksmaudio.cpp
+        src/Stream.cpp
+        src/Sample.cpp
+    )
+endif()
 
 target_include_directories(ksmaudio PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-if(APPLE)
+if(EMSCRIPTEN)
+    target_include_directories(ksmaudio PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty_Web/miniaudio
+        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty_Web/stb_vorbis
+    )
+elseif(APPLE)
     target_include_directories(ksmaudio PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty_macOS/bass
         ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty_macOS/bass_fx
