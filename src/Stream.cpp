@@ -78,7 +78,8 @@ namespace
 
 	BASS_CHANNELINFO GetChannelInfo(HSTREAM hStream)
 	{
-		BASS_CHANNELINFO info;
+		// 読み込み失敗時にチャンネル数が0になるよう{}で明示的にゼロ初期化が必要
+		BASS_CHANNELINFO info{};
 		BASS_ChannelGetInfo(hStream, &info);
 		return info;
 	}
