@@ -81,7 +81,7 @@ namespace ksmaudio::AudioEffect
 		}
 
 		const std::size_t overlapSample = static_cast<std::size_t>(m_overlap * m_chunkSize);
-		if (overlapSample == 0 || m_chunkSize <= overlapSample)
+		if (m_chunkSize <= overlapSample)
 		{
 			return;
 		}
@@ -113,7 +113,13 @@ namespace ksmaudio::AudioEffect
 				}
 
 				float output;
-				if (countTimesPlaySpeed <= overlapSample)
+				if (overlapSample == 0)
+				{
+					// オーバーラップなしの場合はクロスフェードせず現在のチャンクをそのまま出力
+					const std::size_t currentIdx = (kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax;
+					output = m_delayBuffer[ch][currentIdx];
+				}
+				else if (countTimesPlaySpeed <= overlapSample)
 				{
 					const float rate = static_cast<float>(step) / overlapSample;
 					const std::size_t currentIdx = (kDelayBufferMax + m_start - m_chunkSize + step) % kDelayBufferMax;
