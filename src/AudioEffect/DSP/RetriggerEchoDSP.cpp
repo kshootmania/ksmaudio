@@ -72,4 +72,10 @@ namespace ksmaudio::AudioEffect
             m_linearBuffer.resetReadWriteCursors();
         }
     }
+
+    void RetriggerEchoDSP::reset()
+    {
+        m_linearBuffer.resetReadWriteCursors();
+        m_framesUntilTrigger = -1;
+    }
 }

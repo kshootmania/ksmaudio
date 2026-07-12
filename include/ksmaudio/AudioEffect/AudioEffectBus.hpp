@@ -95,6 +95,9 @@ namespace ksmaudio::AudioEffect
 
 		void setBypass(bool bypass);
 
+		// シークで時間が飛んだ場合に全エフェクトのDSPの内部状態を初期化
+		void reset();
+
 		bool audioEffectContainsName(const std::string& name) const;
 
 		std::size_t audioEffectNameToIdx(const std::string& name) const;

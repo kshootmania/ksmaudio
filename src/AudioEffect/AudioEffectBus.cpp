@@ -112,6 +112,14 @@ namespace ksmaudio::AudioEffect
 		}
 	}
 
+	void AudioEffectBus::reset()
+	{
+		for (const auto& audioEffect : m_audioEffects)
+		{
+			audioEffect->reset();
+		}
+	}
+
 	bool AudioEffectBus::audioEffectContainsName(const std::string& name) const
 	{
 		return m_nameIdxDict.contains(name);

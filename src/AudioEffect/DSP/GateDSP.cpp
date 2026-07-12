@@ -66,4 +66,9 @@ namespace ksmaudio::AudioEffect
     {
         m_triggerHandler.setFramesUntilTrigger(params.secUntilTrigger, m_info.sampleRate);
     }
+
+    void GateDSP::reset()
+    {
+        m_triggerHandler.reset();
+    }
 }

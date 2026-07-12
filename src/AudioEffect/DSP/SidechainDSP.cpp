@@ -78,4 +78,10 @@ namespace ksmaudio::AudioEffect
 			}
 		}
 	}
+
+	void SidechainDSP::reset()
+	{
+		m_cursorFrames = 0U;
+		m_framesUntilTrigger = -1;
+	}
 }

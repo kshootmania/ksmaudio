@@ -19,11 +19,8 @@ namespace ksmaudio::AudioEffect::detail
 
 		void update(float currentTimeSec)
 		{
-			// カーソルを現在時間まで進める
-			while (m_updateTriggerTimingCursor != m_updateTriggerTiming.end() && *m_updateTriggerTimingCursor < currentTimeSec)
-			{
-				++m_updateTriggerTimingCursor;
-			}
+			// ループ再生などで時間が巻き戻るケースがあるため、カーソルは毎回探し直す
+			m_updateTriggerTimingCursor = m_updateTriggerTiming.lower_bound(currentTimeSec);
 
 			if (m_updateTriggerTimingCursor == m_updateTriggerTiming.end())
 			{

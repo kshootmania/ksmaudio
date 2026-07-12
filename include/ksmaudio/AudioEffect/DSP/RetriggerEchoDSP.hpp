@@ -18,5 +18,7 @@ namespace ksmaudio::AudioEffect
 		void process(float* pData, std::size_t dataSize, bool bypass, const RetriggerEchoDSPParams& params);
 
 		void updateParams(const RetriggerEchoDSPParams& params);
+
+		void reset();
 	};
 }

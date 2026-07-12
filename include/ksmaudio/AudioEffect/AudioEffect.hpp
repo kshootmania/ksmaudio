@@ -25,6 +25,11 @@ namespace ksmaudio::AudioEffect
 		virtual std::unordered_map<ParamID, ValueSet> paramValueSetDict() const = 0;
 
 		virtual void setBypass(bool bypass) = 0;
+
+		// シークで時間が飛んだ場合にDSPの内部状態を初期化(トリガー系DSPのみ対応)
+		virtual void reset()
+		{
+		}
 	};
 
 	struct DSPCommonInfo
@@ -180,6 +185,13 @@ namespace ksmaudio::AudioEffect
 			std::lock_guard<std::mutex> lock(m_mutex);
 
 			m_dsp.process(pData, dataSize, m_bypass, m_dspParams);
+		}
+
+		virtual void reset() override
+		{
+			std::lock_guard<std::mutex> lock(m_mutex);
+
+			m_dsp.reset();
 		}
 
 		virtual void updateStatusByFX(const Status& status, std::optional<std::size_t> laneIdx) override

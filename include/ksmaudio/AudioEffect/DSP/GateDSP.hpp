@@ -17,5 +17,7 @@ namespace ksmaudio::AudioEffect
 		void process(float* pData, std::size_t dataSize, bool bypass, const GateDSPParams& params);
 
 		void updateParams(const GateDSPParams& params);
+
+		void reset();
 	};
 }

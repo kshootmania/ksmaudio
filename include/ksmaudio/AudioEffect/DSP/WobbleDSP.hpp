@@ -19,5 +19,7 @@ namespace ksmaudio::AudioEffect
 		void process(float* pData, std::size_t dataSize, bool bypass, const WobbleDSPParams& params);
 
 		void updateParams(const WobbleDSPParams& params);
+
+		void reset();
 	};
 }

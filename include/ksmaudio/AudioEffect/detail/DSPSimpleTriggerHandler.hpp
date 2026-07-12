@@ -48,6 +48,12 @@ namespace ksmaudio::AudioEffect::detail
             }
         }
 
+        void reset()
+        {
+            m_framesSincePrevTrigger = 0U;
+            m_framesUntilTrigger = -1;
+        }
+
         void setFramesUntilTrigger(float secUntilTrigger, std::size_t sampleRate)
         {
             if (secUntilTrigger >= 0.0f) // Negative value is ignored
