@@ -431,6 +431,11 @@ namespace ksmaudio
 		{
 			return m_sliding;
 		}
+
+		float attribVol() const
+		{
+			return m_attribVol;
+		}
 	};
 
 	// Webバックエンドは再生速度変更(playbackSpeed)未対応のため、1.0以外が渡されても無視して等速で再生する
@@ -497,7 +502,10 @@ namespace ksmaudio
 
 	void Stream::setFadeIn(Duration duration) const
 	{
-		m_impl->slideAttribVol(0.0f, 1.0f, duration.count());
+		// 音量を0から本来の音量まで推移させる(100%超の増幅は増幅ゲイン側で行うため上限は1.0)
+		const double volume = m_impl->volume();
+		const float targetVolume = volume > 1.0 ? 1.0f : static_cast<float>(volume);
+		m_impl->slideAttribVol(0.0f, targetVolume, duration.count());
 	}
 
 	void Stream::setFadeIn(Duration duration, double volume)
@@ -508,7 +516,8 @@ namespace ksmaudio
 
 	void Stream::setFadeOut(Duration duration) const
 	{
-		m_impl->slideAttribVol(1.0f, 0.0f, duration.count());
+		// 音量を現在値から0まで推移させる
+		m_impl->slideAttribVol(m_impl->attribVol(), 0.0f, duration.count());
 	}
 
 	void Stream::setFadeOut(Duration duration, double volume)

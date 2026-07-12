@@ -255,9 +255,10 @@ namespace ksmaudio
 
 	void Stream::setFadeIn(Duration duration) const
 	{
-		// フェード係数を0から1まで推移させる
+		// 音量を0から本来の音量まで推移させる(100%超の増幅はBASS_FX_BFX_VOLUME側で行うため上限は1.0)
+		const float targetVolume = m_volume > 1.0 ? 1.0f : static_cast<float>(m_volume);
 		BASS_ChannelSetAttribute(m_hStream, BASS_ATTRIB_VOL, 0.0f);
-		BASS_ChannelSlideAttribute(m_hStream, BASS_ATTRIB_VOL, 1.0f, static_cast<DWORD>(duration.count() * 1000));
+		BASS_ChannelSlideAttribute(m_hStream, BASS_ATTRIB_VOL, targetVolume, static_cast<DWORD>(duration.count() * 1000));
 	}
 
 	void Stream::setFadeIn(Duration duration, double volume)
@@ -269,8 +270,7 @@ namespace ksmaudio
 
 	void Stream::setFadeOut(Duration duration) const
 	{
-		// フェード係数を1から0まで推移させる
-		BASS_ChannelSetAttribute(m_hStream, BASS_ATTRIB_VOL, 1.0f);
+		// 音量を現在値から0まで推移させる(1.0へリセットするとフェード開始時に音量が跳ね上がるため)
 		BASS_ChannelSlideAttribute(m_hStream, BASS_ATTRIB_VOL, 0.0f, static_cast<DWORD>(duration.count() * 1000));
 	}
 
