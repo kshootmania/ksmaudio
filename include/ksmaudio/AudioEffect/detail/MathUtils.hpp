@@ -24,19 +24,6 @@ namespace ksmaudio::AudioEffect::detail
 	}
 
 	template <typename T>
-	T TriangleWithStereoWidth(T timeRate, std::size_t channel, T stereoWidth)
-	{
-		if (channel == 0U)
-		{
-			return Triangle(timeRate);
-		}
-		else
-		{
-			return Triangle(DecimalPart(timeRate + stereoWidth / 2));
-		}
-	}
-
-	template <typename T>
 	T ClampFreq(T freq)
 	{
 		return std::clamp(freq, T{ 10 }, T{ 22050 });

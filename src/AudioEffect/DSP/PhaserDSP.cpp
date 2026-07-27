@@ -22,7 +22,7 @@ namespace ksmaudio::AudioEffect
 
 	void PhaserDSP::process(float* pData, std::size_t dataSize, bool bypass, const PhaserDSPParams& params)
 	{
-		if (m_info.isUnsupported || bypass)
+		if (m_info.isUnsupported)
 		{
 			return;
 		}
@@ -39,7 +39,8 @@ namespace ksmaudio::AudioEffect
 			m_hiCutFilters[channel].setHighShelfFilter(centerFreq, kHiCutFilterQ, params.hiCutGain, m_info.sampleRateFloat);
 		}
 
-		const std::size_t stage = params.mix > 0.0f ? params.stage : 0U;
+		// エフェクトが無効の間もLFOの位相を進めるため、bypass時はstageを0として下の分岐で処理する
+		const std::size_t stage = !bypass && params.mix > 0.0f ? params.stage : 0U;
 		if (stage > 0U)
 		{
 			for (std::size_t i = 0; i < numFrames; ++i)
@@ -47,7 +48,8 @@ namespace ksmaudio::AudioEffect
 				std::array<std::array<float, 2>, kMaxNumAllPassFilters> wetArray = m_prevWetArrayForFeedback;
 				for (std::size_t channel = 0; channel < m_info.numChannels; ++channel)
 				{
-					const float lfoValue = detail::TriangleWithStereoWidth(m_lfoTimeRate, channel, params.stereoWidth);
+					// 2チャンネル目はstereoWidthの割合だけLFOの位相をずらす
+					const float lfoValue = detail::Triangle(channel == 0U ? m_lfoTimeRate : detail::DecimalPart(m_lfoTimeRate + params.stereoWidth));
 					const float freq = detail::InterpolateFreqInLog10ScaleWithPrecalculatedLog10(lfoValue, log10Freq1, log10Freq2);
 					for (std::size_t s = 0; s < kMaxNumAllPassFilters; ++s)
 					{
