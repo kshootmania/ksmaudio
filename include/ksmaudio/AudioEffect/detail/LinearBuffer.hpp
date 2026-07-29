@@ -11,6 +11,9 @@ namespace ksmaudio::AudioEffect::detail
 {
     constexpr std::size_t kLinearBufferDeclickFrames = 12U;
 
+    // Echoのフェードアウト長の繰り返し長に対する倍率(繰り返し長より長いため、各繰り返しの末尾でも音量は0にならない)
+    constexpr float kLinearBufferEchoFadeOutLengthRate = 1.25f;
+
     // Useful for audio recording
     template <typename T>
     class LinearBuffer
@@ -62,7 +65,7 @@ namespace ksmaudio::AudioEffect::detail
             m_writeCursorFrame += numWriteFrames;
         }
 
-        void read(T* pData, std::size_t size, std::size_t numLoopFrames, std::size_t numNonZeroFrames, bool fadesOut = false, float fadeOutFeedbackLevel = 1.0f, float mix = 1.0f, bool bypass = false)
+        void read(T* pData, std::size_t size, std::size_t numLoopFrames, std::size_t numNonZeroFrames, bool isEcho = false, float fadeOutFeedbackLevel = 1.0f, float mix = 1.0f, bool bypass = false)
         {
             assert(size % m_numChannels == 0U);
 
@@ -127,9 +130,10 @@ namespace ksmaudio::AudioEffect::detail
                         wet = T{ 0 };
                     }
 
-                    if (fadesOut)
+                    if (isEcho)
                     {
-                        const float fadeOutScale = static_cast<float>(numLoopFrames - readCursorFrameWithLoop) / numLoopFrames * m_currentFadeOutScale;
+                        const float fadeOutLengthFrames = numLoopFrames * kLinearBufferEchoFadeOutLengthRate;
+                        const float fadeOutScale = (fadeOutLengthFrames - readCursorFrameWithLoop) / fadeOutLengthFrames * m_currentFadeOutScale;
                         wet *= fadeOutScale;
                     }
 

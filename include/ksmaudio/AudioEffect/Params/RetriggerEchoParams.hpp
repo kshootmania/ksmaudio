@@ -9,7 +9,7 @@ namespace ksmaudio::AudioEffect
 		bool updateTrigger = false;
 		float waveLength = 0.0f;
 		float rate = 0.7f;
-		bool fadesOut = false;
+		bool isEcho = false;
 		float feedbackLevel = 1.0f;
 		float mix = 1.0f;
 	};
@@ -37,7 +37,7 @@ namespace ksmaudio::AudioEffect
 				.updateTrigger = updateTrigger.renderByFX(status, laneIdx),
 				.waveLength = GetValue(waveLength, status, isOn),
 				.rate = GetValue(rate, status, isOn),
-				.fadesOut = false, // Retriggerではfalse固定
+				.isEcho = false, // Retriggerではfalse固定
 				.feedbackLevel = 1.0f, // Retriggerでは1固定
 				.mix = GetValue(mix, status, isOn),
 				// secUntilTriggerは利用側(BasicAudioEffectWithTrigger::updateStatus())で設定されるのでここでは指定しない
@@ -50,7 +50,7 @@ namespace ksmaudio::AudioEffect
 				.updateTrigger = updateTrigger.renderByLaser(status, isOn),
 				.waveLength = GetValue(waveLength, status, isOn),
 				.rate = GetValue(rate, status, isOn),
-				.fadesOut = false, // Retriggerではfalse固定
+				.isEcho = false, // Retriggerではfalse固定
 				.feedbackLevel = 1.0f, // Retriggerでは1固定
 				.mix = GetValue(mix, status, isOn),
 				// secUntilTriggerは利用側(BasicAudioEffectWithTrigger::updateStatus())で設定されるのでここでは指定しない
@@ -81,7 +81,7 @@ namespace ksmaudio::AudioEffect
 				.updateTrigger = updateTrigger.renderByFX(status, laneIdx),
 				.waveLength = GetValue(waveLength, status, isOn),
 				.rate = 1.0f, // Echoでは1固定
-				.fadesOut = true, // Echoではtrue固定
+				.isEcho = true, // Echoではtrue固定
 				.feedbackLevel = GetValue(feedbackLevel, status, isOn),
 				.mix = GetValue(mix, status, isOn),
 				// secUntilTriggerは利用側(BasicAudioEffectWithTrigger::updateStatus())で設定されるのでここでは指定しない
@@ -94,7 +94,7 @@ namespace ksmaudio::AudioEffect
 				.updateTrigger = updateTrigger.renderByLaser(status, isOn),
 				.waveLength = GetValue(waveLength, status, isOn),
 				.rate = 1.0f, // Echoでは1固定
-				.fadesOut = true, // Echoではtrue固定
+				.isEcho = true, // Echoではtrue固定
 				.feedbackLevel = GetValue(feedbackLevel, status, isOn),
 				.mix = GetValue(mix, status, isOn),
 				// secUntilTriggerは利用側(BasicAudioEffectWithTrigger::updateStatus())で設定されるのでここでは指定しない

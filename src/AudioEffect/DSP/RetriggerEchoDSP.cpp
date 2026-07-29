@@ -25,7 +25,7 @@ namespace ksmaudio::AudioEffect
             // トリガ更新より前
             const std::size_t formerSize = static_cast<std::size_t>(m_framesUntilTrigger) * m_info.numChannels;
             m_linearBuffer.write(pData, formerSize);
-            m_linearBuffer.read(pData, formerSize, numLoopFrames, numNonZeroFrames, params.fadesOut, params.feedbackLevel, params.mix, bypass);
+            m_linearBuffer.read(pData, formerSize, numLoopFrames, numNonZeroFrames, params.isEcho, params.feedbackLevel, params.mix, bypass);
 
             // framesUntilTriggerによるトリガ更新("update_period"による更新)
             m_linearBuffer.resetReadWriteCursors();
@@ -34,14 +34,14 @@ namespace ksmaudio::AudioEffect
             // トリガ更新より後ろ
             const std::size_t latterSize = dataSize - formerSize;
             m_linearBuffer.write(pData + formerSize, latterSize);
-            m_linearBuffer.read(pData + formerSize, latterSize, numLoopFrames, numNonZeroFrames, params.fadesOut, params.feedbackLevel, params.mix, bypass);
+            m_linearBuffer.read(pData + formerSize, latterSize, numLoopFrames, numNonZeroFrames, params.isEcho, params.feedbackLevel, params.mix, bypass);
         }
         else
         {
             // 今回の処理フレーム中にトリガ更新タイミングが含まれていない場合、一度に処理
 
             m_linearBuffer.write(pData, dataSize);
-            m_linearBuffer.read(pData, dataSize, numLoopFrames, numNonZeroFrames, params.fadesOut, params.feedbackLevel, params.mix, bypass);
+            m_linearBuffer.read(pData, dataSize, numLoopFrames, numNonZeroFrames, params.isEcho, params.feedbackLevel, params.mix, bypass);
 
             // 次回トリガ更新タイミングまでの残り時間を減らす
             if (std::cmp_greater_equal(m_framesUntilTrigger, frameSize)) // m_framesUntilTrigger >= frameSize
