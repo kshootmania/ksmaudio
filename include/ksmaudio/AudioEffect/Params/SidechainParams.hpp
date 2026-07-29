@@ -17,7 +17,7 @@ namespace ksmaudio::AudioEffect
 		Param period = DefineParam(Type::kLength, "1/4");
 		Param attackTime = DefineParam(Type::kLength, "10ms");
 		Param holdTime = DefineParam(Type::kLength, "50ms");
-		Param releaseTime = DefineParam(Type::kLength, "1/16");
+		Param releaseTime = DefineParam(Type::kLength, "1/8");
 		Param ratio = DefineParam(Type::kFloat, "1.0>5.0");
 
 		const std::unordered_map<ParamID, Param*> dict = {

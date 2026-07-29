@@ -106,7 +106,7 @@ namespace ksmaudio::AudioEffect
 			{ ParamID::kPeriod, "period", Type::kLength, "1/4" },
 			{ ParamID::kHoldTime, "hold_time", Type::kLength, "50ms" },
 			{ ParamID::kAttackTime, "attack_time", Type::kLength, "10ms" },
-			{ ParamID::kReleaseTime, "release_time", Type::kLength, "1/16" },
+			{ ParamID::kReleaseTime, "release_time", Type::kLength, "1/8" },
 			{ ParamID::kRatio, "ratio", Type::kFloat, "1>5" },
 		};
 
