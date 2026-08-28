@@ -84,7 +84,7 @@ namespace
 		return info;
 	}
 
-	void ProcessAudioEffect(HDSP handle, DWORD channel, void* buffer, DWORD length, void* user)
+	static void CALLBACK ProcessAudioEffect(HDSP handle, DWORD channel, void* buffer, DWORD length, void* user)
 	{
 		const auto pAudioEffect = reinterpret_cast<ksmaudio::AudioEffect::IAudioEffect*>(user);
 		const auto pData = reinterpret_cast<float*>(buffer);
