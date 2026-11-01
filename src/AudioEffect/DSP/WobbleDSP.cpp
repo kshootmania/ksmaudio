@@ -37,6 +37,11 @@ namespace ksmaudio::AudioEffect
 
     void WobbleDSP::process(float* pData, std::size_t dataSize, bool bypass, const WobbleDSPParams& params)
     {
+        if (m_info.isUnsupported)
+        {
+            return;
+        }
+
         assert(dataSize % m_info.numChannels == 0);
 
         const std::size_t frameSize = dataSize / m_info.numChannels;
