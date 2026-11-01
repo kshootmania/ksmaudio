@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <cmath>
 #include <numbers>
 
@@ -8,6 +9,18 @@ namespace ksmaudio::AudioEffect::detail
     class BiquadFilter
     {
     private:
+        // ナイキスト周波数以上を指定すると発散するため、sampleRateの0.49倍を上限とする
+        static T ClampFreqBelowNyquist(T freq, T sampleRate)
+        {
+            return (std::min)(freq, sampleRate * T{ 0.49 });
+        }
+
+        // qが0以下だとゼロ除算になるため、下限を設ける
+        static T ClampQ(T q)
+        {
+            return (std::max)(q, T{ 0.01 });
+        }
+
         T m_a0 = T{ 1 };
         T m_a1 = T{ 0 };
         T m_a2 = T{ 0 };
@@ -41,6 +54,9 @@ namespace ksmaudio::AudioEffect::detail
 
         void setLowPassFilter(T freq, T q, T sampleRate)
         {
+            freq = ClampFreqBelowNyquist(freq, sampleRate);
+            q = ClampQ(q);
+
             const T omega = std::numbers::pi_v<T> * 2 * freq / sampleRate;
             const T alpha = std::sin(omega) / (q * 2);
 
@@ -55,6 +71,8 @@ namespace ksmaudio::AudioEffect::detail
 
         void setLowShelfFilter(T freq, T q, T gainDb, T sampleRate)
         {
+            freq = ClampFreqBelowNyquist(freq, sampleRate);
+
             const T omega = std::numbers::pi_v<T> * 2 * freq / sampleRate;
             const T A = std::pow(T{ 10 }, gainDb / 40);
             const T beta = std::sqrt(A) / q;
@@ -71,6 +89,9 @@ namespace ksmaudio::AudioEffect::detail
 
         void setHighPassFilter(T freq, T q, T sampleRate)
         {
+            freq = ClampFreqBelowNyquist(freq, sampleRate);
+            q = ClampQ(q);
+
             const T omega = std::numbers::pi_v<T> * 2 * freq / sampleRate;
             const T alpha = std::sin(omega) / (q * 2);
 
@@ -85,6 +106,8 @@ namespace ksmaudio::AudioEffect::detail
 
         void setHighShelfFilter(T freq, T q, T gainDb, T sampleRate)
         {
+            freq = ClampFreqBelowNyquist(freq, sampleRate);
+
             const T omega = std::numbers::pi_v<T> * 2 * freq / sampleRate;
             const T A = std::pow(T{ 10 }, gainDb / 40);
             const T beta = std::sqrt(A) / q;
@@ -101,6 +124,8 @@ namespace ksmaudio::AudioEffect::detail
 
         void setPeakingFilter(T freq, T bandwidth, T gainDb, T sampleRate)
         {
+            freq = ClampFreqBelowNyquist(freq, sampleRate);
+
             const T omega = std::numbers::pi_v<T> * 2 * freq / sampleRate;
             const T alpha = std::sin(omega) * std::sinh(std::log(T{ 2 }) / 2 * bandwidth * omega / std::sin(omega));
             const T A = std::pow(T{ 10 }, gainDb / 40);
@@ -116,6 +141,9 @@ namespace ksmaudio::AudioEffect::detail
 
         void setAllPassFilter(T freq, T q, T sampleRate)
         {
+            freq = ClampFreqBelowNyquist(freq, sampleRate);
+            q = ClampQ(q);
+
             const T omega = std::numbers::pi_v<T> * 2 * freq / sampleRate;
             const T alpha = std::sin(omega) / (q * 2);
 
