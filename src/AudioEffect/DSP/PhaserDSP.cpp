@@ -22,7 +22,7 @@ namespace ksmaudio::AudioEffect
 
 	void PhaserDSP::process(float* pData, std::size_t dataSize, bool bypass, const PhaserDSPParams& params)
 	{
-		if (m_info.isUnsupported)
+		if (m_info.isUnsupported || dataSize == 0U)
 		{
 			return;
 		}
