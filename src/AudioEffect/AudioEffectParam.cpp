@@ -10,13 +10,24 @@ namespace ksmaudio::AudioEffect
 {
 	namespace
 	{
+		// std::stofと同様にfloatをパース(std::stofと異なり、nan/infの場合もstd::invalid_argumentを投げる)
+		float StofFinite(const std::string& str, std::size_t* pPos = nullptr)
+		{
+			const float value = std::stof(str, pPos);
+			if (!std::isfinite(value))
+			{
+				throw std::invalid_argument("non-finite value");
+			}
+			return value;
+		}
+
 		// suffixの検証付きでfloatをパース
 		bool ParseFloatWithSuffix(const std::string& str, const std::string& suffix, float* pOutValue, const std::string& typeName = "")
 		{
 			std::size_t pos = 0;
 			try
 			{
-				*pOutValue = std::stof(str, &pos);
+				*pOutValue = StofFinite(str, &pos);
 			}
 			catch (...)
 			{
@@ -113,7 +124,7 @@ namespace ksmaudio::AudioEffect
 					}
 				}
 				{
-					const float value = std::stof(str);
+					const float value = StofFinite(str);
 					if (value < 0.0f)
 					{
 						std::cerr << "[ksmaudio warning] length value out of range (>= 0.0): " << value << std::endl;
@@ -191,7 +202,7 @@ namespace ksmaudio::AudioEffect
 					}
 				}
 				{
-					const float value = std::stof(str);
+					const float value = StofFinite(str);
 					if (value < 0.0f || value > 1.0f)
 					{
 						std::cerr << "[ksmaudio warning] rate value out of range (0.0-1.0): " << value << std::endl;
@@ -243,7 +254,7 @@ namespace ksmaudio::AudioEffect
 				//   > 0: not quantized (real_value + 48)
 				//   < 0: quantized (-real_value - 48)
 				{
-					const float value = std::stof(str);
+					const float value = StofFinite(str);
 					if ((value >= -48.0f) && (value <= 48.0f))
 					{
 						if (str.find('.') != std::string::npos)
@@ -266,7 +277,7 @@ namespace ksmaudio::AudioEffect
 				return static_cast<float>(std::stoi(str));
 
 			case Type::kFloat:
-				return std::stof(str);
+				return StofFinite(str);
 
 			case Type::kDB:
 				if (str.ends_with("dB"))
