@@ -171,7 +171,7 @@ namespace ksmaudio::AudioEffect::detail
             }
             else if (m_writeCursorFrame - m_readCursorFrame < frameSize)
             {
-                const std::size_t numReadFrames = m_numFrames - m_readCursorFrame;
+                const std::size_t numReadFrames = m_writeCursorFrame - m_readCursorFrame;
                 std::memcpy(pData, &m_buffer[m_readCursorFrame * m_numChannels], sizeof(T) * numReadFrames * m_numChannels);
                 std::memset(pData + numReadFrames * m_numChannels, 0, sizeof(T) * (frameSize - numReadFrames) * m_numChannels); // HACK: This assumes IEEE 754
                 m_readCursorFrame += numReadFrames;
