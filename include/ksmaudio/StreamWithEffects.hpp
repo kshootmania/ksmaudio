@@ -21,9 +21,10 @@ namespace ksmaudio
 
 		StreamWithEffects& operator=(const StreamWithEffects&) = delete;
 
-		StreamWithEffects(StreamWithEffects&&) = default;
+		// Note: Move is not allowed because AudioEffectBus holds the address of m_stream.
+		StreamWithEffects(StreamWithEffects&&) = delete;
 
-		StreamWithEffects& operator=(StreamWithEffects&&) = default;
+		StreamWithEffects& operator=(StreamWithEffects&&) = delete;
 
 		void play() const;
 

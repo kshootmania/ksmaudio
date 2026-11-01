@@ -446,10 +446,6 @@ namespace ksmaudio
 
 	Stream::~Stream() = default;
 
-	Stream::Stream(Stream&&) = default;
-
-	Stream& Stream::operator=(Stream&&) = default;
-
 	void Stream::applyVolume()
 	{
 		m_impl->applyVolume();

@@ -41,16 +41,10 @@ namespace ksmaudio
 
 		Stream& operator=(const Stream&) = delete;
 
-#ifdef KSMAUDIO_BACKEND_BASS
-		Stream(Stream&&) = default;
+		// BASSバックエンドではムーブ元とムーブ先の両方でBASS_StreamFreeされるためムーブ禁止(Webバックエンドも揃えて禁止)
+		Stream(Stream&&) = delete;
 
-		Stream& operator=(Stream&&) = default;
-#else
-		// WebバックエンドではImplが不完全型のため定義はcpp側に置く
-		Stream(Stream&&);
-
-		Stream& operator=(Stream&&);
-#endif
+		Stream& operator=(Stream&&) = delete;
 
 		void play() const;
 
